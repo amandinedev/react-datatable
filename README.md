@@ -1,0 +1,1 @@
+This pluggin is a highly customizable, performant React data table component. It features dynamic column configuration, sorting, pagination, and filtering.
