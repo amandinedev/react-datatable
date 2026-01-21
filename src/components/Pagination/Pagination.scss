@@ -1,0 +1,383 @@
+// Pagination.scss
+@use '../../sass/abstracts' as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $dt-pagination-gap;
+  padding: 16px 0;
+  flex-wrap: wrap;
+  
+  // Generate CSS custom properties
+  @each $name, $value in $dt-custom-properties {
+    --dt-#{$name}: #{$value};
+  }
+  
+  // Screen reader only utility
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+.pagination-button {
+  // Using dt-button-reset mixin
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  text-decoration: none;
+  display: inline-block;
+  line-height: inherit;
+  margin: 0;
+  
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: $dt-input-border-width solid var(--dt-border-color, #{$dt-border-color});
+  background: var(--dt-bg-color, #{$dt-bg-color});
+  color: var(--dt-text-color, #{$dt-text-color});
+  font-size: var(--dt-font-size, #{$dt-font-size});
+  font-weight: $dt-font-weight-semibold;
+  border-radius: $dt-border-radius-sm;
+  transition: all $dt-transition-speed $dt-transition-timing;
+  min-height: $dt-pagination-button-height;
+  min-width: max-content;
+  line-height: $dt-line-height;
+  position: relative;
+  
+  &:hover:not(:disabled) {
+    background: var(--dt-hover-color, #{$dt-hover-color});
+    border-color: var(--dt-primary-color, #{$dt-primary-color});
+    transform: translateY(-1px);
+    box-shadow: $dt-box-shadow;
+  }
+  
+  &:focus {
+     @include dt-focus-outline;
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+  
+  &:disabled {
+    color: $dt-disabled-color;
+    cursor: not-allowed;
+    opacity: 0.6;
+    background: lighten($dt-bg-color, 5%);
+    border-color: lighten($dt-border-color, 10%);
+  }
+  
+  // High contrast mode
+  @media (prefers-contrast: high) {
+    border-width: 3px;
+    
+    &:disabled {
+      border-style: dashed;
+    }
+  }
+  
+  // Navigation buttons specific styles
+  &--first,
+  &--last {
+    font-weight: $dt-font-weight-bold;
+  }
+}
+
+.page-numbers {
+  display: flex;
+  gap: 4px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.page-number {
+  // Using dt-button-reset pattern
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  
+  min-width: $dt-pagination-button-width;
+  height: $dt-pagination-button-height;
+  padding: 0 8px;
+  border: $dt-input-border-width solid var(--dt-border-color, #{$dt-border-color});
+  background: var(--dt-bg-color, #{$dt-bg-color});
+  color: var(--dt-text-color, #{$dt-text-color});
+  font-size: var(--dt-font-size, #{$dt-font-size});
+  font-weight: $dt-font-weight-normal;
+  border-radius: $dt-border-radius-sm;
+  transition: all $dt-transition-speed $dt-transition-timing;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: $dt-line-height;
+  position: relative;
+  
+  &:hover:not(.active) {
+    background: var(--dt-hover-color, #{$dt-hover-color});
+    border-color: var(--dt-primary-color, #{$dt-primary-color});
+    transform: translateY(-1px);
+  }
+  
+  &:focus {
+    // Using dt-focus-outline pattern
+    outline: 2px solid var(--dt-primary-color, #{$dt-primary-color});
+    outline-offset: 2px;
+    border-color: var(--dt-primary-color, #{$dt-primary-color});
+    box-shadow: $dt-box-shadow-focus;
+    z-index: 1;
+  }
+  
+  &:active:not(.active) {
+    transform: translateY(0);
+  }
+  
+  &.active {
+    background: $dt-pagination-active-bg;
+    color: $dt-pagination-active-color;
+    border-color: $dt-primary-color;
+    font-weight: $dt-font-weight-bold;
+    cursor: default;
+    position: relative;
+    
+    &:focus {
+      outline-color: $dt-pagination-active-color;
+    }
+  }
+  
+  // High contrast mode
+  @media (prefers-contrast: high) {
+    border-width: 3px;
+    
+    &.active {
+      border-width: 4px;
+    }
+  }
+}
+
+.page-ellipsis-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: $dt-pagination-button-width;
+  height: $dt-pagination-button-height;
+}
+
+.page-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: $dt-pagination-button-width;
+  height: $dt-pagination-button-height;
+  color: $dt-disabled-color;
+  user-select: none;
+  font-size: var(--dt-font-size, #{$dt-font-size});
+  font-weight: $dt-font-weight-bold;
+}
+
+.pagination-status {
+  // Using sr-only pattern
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Dark theme adjustment
+.data-table.dark-theme {
+  .pagination {
+    .pagination-button {
+      background: lighten($dt-dark-bg, 5%);
+      border-color: $dt-dark-border;
+      color: $dt-dark-text;
+      
+      &:hover:not(:disabled) {
+        background: $dt-dark-hover;
+        border-color: $dt-primary-color;
+      }
+      
+      &:disabled {
+        background: darken($dt-dark-bg, 5%);
+        color: lighten($dt-dark-text, 30%);
+        border-color: $dt-dark-border;
+      }
+    }
+    
+    .page-number {
+      background: lighten($dt-dark-bg, 5%);
+      border-color: $dt-dark-border;
+      color: $dt-dark-text;
+      
+      &:hover:not(.active) {
+        background: $dt-dark-hover;
+        border-color: $dt-primary-color;
+      }
+      
+      &.active {
+        background: $dt-pagination-active-bg;
+        color: $dt-pagination-active-color;
+        border-color: $dt-primary-color;
+        
+        &::after {
+          background: $dt-pagination-active-color;
+        }
+      }
+    }
+    
+    .page-ellipsis {
+      color: lighten($dt-dark-text, 30%);
+    }
+  }
+}
+
+// Compact theme adjustment
+.data-table.compact {
+  .pagination {
+    padding: 8px 0;
+    gap: $dt-pagination-gap-sm;
+    
+    .pagination-button {
+      padding: 4px 12px;
+      font-size: $dt-font-size-sm;
+      min-height: $dt-pagination-button-height-sm;
+      
+      // Hide text, show icons on very small screens
+      @media (max-width: 480px) {
+        span:not(.sr-only) {
+          display: none;
+        }
+        
+        &::before,
+        &::after {
+          content: '';
+          display: block;
+          width: 0.5em;
+          height: 0.5em;
+          border-style: solid;
+          border-width: 2px 2px 0 0;
+        }
+        
+        &--previous::before {
+          transform: rotate(225deg);
+        }
+        
+        &--next::after {
+          transform: rotate(45deg);
+        }
+        
+        &--first::before {
+          content: '⟪';
+          border: none;
+          font-size: 1.2em;
+        }
+        
+        &--last::after {
+          content: '⟫';
+          border: none;
+          font-size: 1.2em;
+        }
+      }
+    }
+    
+    .page-number {
+      min-width: $dt-pagination-button-width-sm;
+      height: $dt-pagination-button-height-sm;
+      font-size: $dt-font-size-sm;
+    }
+    
+    .page-ellipsis-item {
+      min-width: $dt-pagination-button-width-sm;
+      height: $dt-pagination-button-height-sm;
+    }
+    
+    .page-ellipsis {
+      min-width: $dt-pagination-button-width-sm;
+      height: $dt-pagination-button-height-sm;
+      font-size: $dt-font-size-sm;
+    }
+  }
+}
+
+// Reduced motion preference
+@media (prefers-reduced-motion: reduce) {
+  .pagination {
+    .pagination-button,
+    .page-number {
+      transition: none;
+      transform: none !important;
+    }
+  }
+}
+
+// Focus visible polyfill for older browsers
+.pagination-button:focus:not(:focus-visible),
+.page-number:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+// Responsive adjustments
+@media (min-width: $dt-breakpoint-sm) {
+  .pagination {
+    gap: 6px;
+    padding: 12px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .pagination {
+    .pagination-button {
+      padding: 6px 8px;
+      font-size: $dt-font-size-sm;
+    }
+    
+    .page-number {
+      min-width: 32px;
+      height: 32px;
+      font-size: $dt-font-size-sm;
+    }
+    
+    .page-ellipsis-item {
+      min-width: 32px;
+      height: 32px;
+    }
+    
+    .page-ellipsis {
+      min-width: 32px;
+      height: 32px;
+      font-size: $dt-font-size-sm;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .pagination {
+    display: none;
+  }
+}

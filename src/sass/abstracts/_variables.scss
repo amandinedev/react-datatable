@@ -1,0 +1,210 @@
+// _variables.scss
+// ============================================================================
+// DATA TABLE STYLING VARIABLES
+// ============================================================================
+//
+// Customize these variables to style the DataTable component.
+// Override them in your project by redefining before importing the component.
+//
+// Example usage in your project:
+// 1. Create a file: `my-data-table-overrides.scss`
+// 2. Redefine variables: $dt-primary-color: #ff0000;
+// 3. Import the DataTable styles AFTER your overrides
+// ============================================================================
+
+// ==================== CORE COLORS ====================
+$dt-primary-color: #93AD18 !default;
+$dt-primary-color-light: #b3d11f !default;
+$dt-success-color: #90ec94 !default;
+$dt-warning-color: #ffc107 !default;
+$dt-danger-color: #dc3545 !default;
+$dt-info-color: #5A6F07 !default;
+
+// ==================== THEME COLORS ====================
+// Light Theme (Default)
+$dt-bg-color: #ffffff !default;
+$dt-text-color: #212529 !default;
+$dt-border-color: #e9ecef !default;
+$dt-hover-color: #f8faf9 !default;
+$dt-header-bg: #f8f9fa !default;
+$dt-disabled-color: #6c757d !default;
+$dt-placeholder-color: #adb5bd !default;
+$dt-shadow-color: rgba(0, 0, 0, 0.1) !default;
+
+// Dark Theme
+$dt-dark-bg: #2d3748 !default;
+$dt-dark-text: #e2e8f0 !default;
+$dt-dark-border: #4a5568 !default;
+$dt-dark-hover: #4a5568 !default;
+$dt-dark-header: #4a5568 !default;
+
+// ==================== TYPOGRAPHY ====================
+$dt-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif !default;
+$dt-font-size: 14px !default;
+$dt-font-size-sm: 12px !default;
+$dt-font-size-lg: 16px !default;
+$dt-font-size-xl: 18px !default;
+$dt-font-weight-normal: 400 !default;
+$dt-font-weight-semibold: 600 !default;
+$dt-font-weight-bold: 700 !default;
+$dt-line-height: 1.5 !default;
+$dt-line-height-sm: 1.25 !default;
+$dt-line-height-lg: 1.75 !default;
+
+// ==================== SPACING & SIZING ====================
+$dt-border-radius: 8px !default;
+$dt-border-radius-sm: 4px !default;
+$dt-border-radius-lg: 12px !default;
+$dt-border-radius-xl: 16px !default;
+
+$dt-padding: 16px 12px !default;
+$dt-padding-sm: 8px 12px !default;
+$dt-padding-lg: 20px 16px !default;
+$dt-padding-xl: 24px 20px !default;
+
+$dt-controls-padding: 24px !default;
+$dt-controls-padding-sm: 12px !default;
+$dt-controls-padding-lg: 32px !default;
+
+// ==================== SHADOWS & EFFECTS ====================
+$dt-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !default;
+$dt-box-shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.15) !default;
+$dt-box-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.075) !default;
+$dt-box-shadow-focus: 0 0 0 3px rgba($dt-primary-color, 0.2) !default;
+
+$dt-transition-speed: 0.2s !default;
+$dt-transition-speed-slow: 0.3s !default;
+$dt-transition-speed-fast: 0.1s !default;
+$dt-transition-timing: ease-in-out !default;
+$dt-transition-timing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55) !default;
+
+// ==================== Z-INDEX LAYERS ====================
+$dt-zindex-dropdown: 1000 !default;
+$dt-zindex-sticky: 1020 !default;
+$dt-zindex-fixed: 1030 !default;
+$dt-zindex-modal-backdrop: 1040 !default;
+$dt-zindex-modal: 1050 !default;
+$dt-zindex-popover: 1060 !default;
+$dt-zindex-tooltip: 1070 !default;
+$dt-zindex-select: 100 !default;
+
+// ==================== BREAKPOINTS ====================
+$dt-breakpoint-xs: 0 !default;
+$dt-breakpoint-sm: 576px !default;
+$dt-breakpoint-md: 768px !default;
+$dt-breakpoint-lg: 992px !default;
+$dt-breakpoint-xl: 1200px !default;
+$dt-breakpoint-xxl: 1400px !default;
+
+// ==================== TABLE SPECIFIC ====================
+$dt-table-min-height: 300px !default;
+$dt-table-loading-height: 400px !default;
+$dt-table-empty-icon-size: 48px !default;
+$dt-table-sort-indicator-size: 12px !default;
+$dt-table-row-height: 48px !default;
+$dt-table-row-height-sm: 36px !default;
+$dt-table-row-height-lg: 60px !default;
+
+// ==================== PAGINATION ====================
+$dt-pagination-button-width: 40px !default;
+$dt-pagination-button-height: 40px !default;
+$dt-pagination-button-width-sm: 32px !default;
+$dt-pagination-button-height-sm: 32px !default;
+$dt-pagination-button-width-lg: 48px !default;
+$dt-pagination-button-height-lg: 48px !default;
+$dt-pagination-gap: 8px !default;
+$dt-pagination-gap-sm: 4px !default;
+$dt-pagination-gap-lg: 12px !default;
+$dt-pagination-active-bg: $dt-primary-color !default;
+$dt-pagination-active-color: #ffffff !default;
+
+// ==================== PAGE SIZE SELECTOR ====================
+$dt-page-selector-min-width: 80px !default;
+$dt-page-selector-min-width-sm: 70px !default;
+$dt-page-selector-min-width-lg: 90px !default;
+$dt-page-selector-arrow-size: 10px !default;
+$dt-page-selector-arrow-size-sm: 9px !default;
+$dt-page-selector-arrow-size-lg: 11px !default;
+$dt-page-selector-gap: 8px !default;
+$dt-page-selector-gap-sm: 6px !default;
+$dt-page-selector-gap-lg: 10px !default;
+
+// ==================== LOADING SPINNER ====================
+$dt-spinner-size: 40px !default;
+$dt-spinner-size-sm: 24px !default;
+$dt-spinner-size-lg: 56px !default;
+$dt-spinner-border-width: 3px !default;
+$dt-spinner-border-color: #f3f3f3 !default;
+$dt-spinner-border-active-color: $dt-primary-color !default;
+
+// ==================== INPUTS & CONTROLS ====================
+$dt-input-height: 40px !default;
+$dt-input-height-sm: 32px !default;
+$dt-input-height-lg: 48px !default;
+$dt-input-padding: 8px 12px !default;
+$dt-input-padding-sm: 6px 10px !default;
+$dt-input-padding-lg: 10px 14px !default;
+$dt-input-border-width: 2px !default;
+
+// ==================== CUSTOM VARIABLES MAP ====================
+// For generating CSS custom properties
+$dt-custom-properties: (
+  // Core Colors
+  'primary-color': $dt-primary-color,
+  'primary-color-light': $dt-primary-color-light,
+  'bg-color': $dt-bg-color,
+  'text-color': $dt-text-color,
+  'border-color': $dt-border-color,
+  'hover-color': $dt-hover-color,
+  'header-bg': $dt-header-bg,
+  'disabled-color': $dt-disabled-color,
+  'shadow-color': $dt-shadow-color,
+  
+  // Typography
+  'font-family': $dt-font-family,
+  'font-size': $dt-font-size,
+  'font-size-sm': $dt-font-size-sm,
+  'font-size-lg': $dt-font-size-lg,
+  'font-size-xl': $dt-font-size-xl,
+  'font-weight-normal': $dt-font-weight-normal,
+  'font-weight-semibold': $dt-font-weight-semibold,
+  'font-weight-bold': $dt-font-weight-bold,
+  'line-height': $dt-line-height,
+  'line-height-sm': $dt-line-height-sm,
+  'line-height-lg': $dt-line-height-lg,
+  
+  // Spacing
+  'border-radius': $dt-border-radius,
+  'border-radius-sm': $dt-border-radius-sm,
+  'border-radius-lg': $dt-border-radius-lg,
+  'border-radius-xl': $dt-border-radius-xl,
+  'padding': $dt-padding,
+  'padding-sm': $dt-padding-sm,
+  'padding-lg': $dt-padding-lg,
+  'padding-xl': $dt-padding-xl,
+  'controls-padding': $dt-controls-padding,
+  
+  // Effects
+  'box-shadow': $dt-box-shadow,
+  'box-shadow-lg': $dt-box-shadow-lg,
+  'box-shadow-focus': $dt-box-shadow-focus,
+  'transition-speed': $dt-transition-speed,
+  'transition-speed-slow': $dt-transition-speed-slow,
+  'transition-speed-fast': $dt-transition-speed-fast,
+  'transition-timing': $dt-transition-timing,
+  'transition-timing-bounce': $dt-transition-timing-bounce,
+  
+  // Pagination
+  'pagination-button-width': $dt-pagination-button-width,
+  'pagination-button-height': $dt-pagination-button-height,
+  'pagination-gap': $dt-pagination-gap,
+  
+  // Page Size Selector
+  'page-selector-min-width': $dt-page-selector-min-width,
+  'page-selector-gap': $dt-page-selector-gap,
+  
+  // Inputs
+  'input-height': $dt-input-height,
+  'input-padding': $dt-input-padding,
+  'input-border-width': $dt-input-border-width,
+) !default;

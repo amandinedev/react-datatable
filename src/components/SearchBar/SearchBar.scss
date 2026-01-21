@@ -1,0 +1,155 @@
+@use '../../sass/abstracts' as *;
+
+.search-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.search-label {
+  color: $dt-disabled-color;
+  font-size: $dt-font-size;
+  white-space: nowrap;
+  cursor: default;
+  user-select: none;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid $dt-border-color;
+  border-radius: $dt-border-radius-sm;
+  background: $dt-bg-color;
+  color: $dt-text-color;
+  font-size: $dt-font-size;
+  transition: all $dt-transition-speed $dt-transition-timing;
+  
+  &:focus {
+    border-color: var(--dt-primary-color, #{$dt-primary-color});
+  }
+  
+  &::placeholder {
+    color: $dt-placeholder-color;
+    @include dt-truncate;
+  }
+  
+  // Improve placeholder truncation for different browsers
+  &::-webkit-input-placeholder {
+    @include dt-truncate;
+  }
+  
+  &::-moz-placeholder {
+    @include dt-truncate;
+  }
+  
+  &:-ms-input-placeholder {
+    @include dt-truncate;
+  }
+}
+
+.search-clear {
+  position: absolute;
+  right: 8px;
+  @include dt-button-reset;
+  color: $dt-placeholder-color;
+  font-size: 16px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $dt-transition-speed $dt-transition-timing;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  
+  &:hover {
+    color: $dt-text-color;
+    background: rgba($dt-border-color, 0.3);
+  }
+  
+  &:focus {
+    @include dt-focus-outline;
+  }
+  
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+// Dark theme adjustment
+.data-table.dark-theme .search-bar {
+  .search-label {
+    color: lighten($dt-dark-text, 30%);
+  }
+  
+  .search-input {
+    background: lighten($dt-dark-bg, 5%);
+    border-color: $dt-dark-border;
+    color: $dt-dark-text;
+    
+    &::placeholder {
+      color: lighten($dt-dark-text, 30%);
+    }
+    
+    &:focus {
+      border-color: $dt-primary-color;
+      box-shadow: 0 0 0 3px rgba($dt-primary-color, 0.2);
+    }
+  }
+  
+  .search-clear {
+    color: lighten($dt-dark-text, 30%);
+    
+    &:hover {
+      color: $dt-dark-text;
+      background: rgba($dt-dark-border, 0.3);
+    }
+  }
+}
+
+// Compact theme adjustment
+.data-table.compact .search-bar {
+  .search-label {
+    font-size: $dt-font-size-sm;
+  }
+  
+  .search-input {
+    padding: 6px 28px 6px 10px;
+    font-size: $dt-font-size-sm;
+  }
+  
+  .search-clear {
+    font-size: 14px;
+    width: 20px;
+    height: 20px;
+    right: 6px;
+  }
+}
+
+// Responsive adjustments
+@include dt-media(sm) {
+  .search-bar {
+    gap: 4px;
+    
+    .search-label {
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+  }
+}
+
+// Hide label on very small screens
+@media (max-width: 480px) {
+  .search-bar.hide-label-on-mobile .search-label {
+    display: none;
+  }
+}

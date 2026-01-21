@@ -1,0 +1,320 @@
+@use '../../sass/abstracts' as *;
+
+.data-table {
+  font-family: $dt-font-family;
+  background: var(--dt-bg-color, #{$dt-bg-color});
+  border-radius: var(--dt-border-radius, #{$dt-border-radius});
+  box-shadow: var(--dt-box-shadow, #{$dt-box-shadow});
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  
+  // Generate CSS custom properties
+  @each $name, $value in $dt-custom-properties {
+    --dt-#{$name}: #{$value};
+  }
+  
+  // Loading state
+  &.loading {
+    @include dt-flex-center;
+    @include dt-flex-column;
+    min-height: $dt-table-loading-height;
+    gap: 16px;
+    
+    .loading-spinner {
+      width: $dt-spinner-size;
+      height: $dt-spinner-size;
+      border: $dt-spinner-border-width solid var(--dt-border-color, #{$dt-border-color});
+      border-top: $dt-spinner-border-width solid var(--dt-primary-color, #{$dt-primary-color});
+      border-radius: 50%;
+      @include dt-loading-animation;
+    }
+    
+    p {
+      color: var(--dt-text-color, #{$dt-text-color});
+      opacity: 0.7;
+      margin: 0;
+    }
+  }
+  
+  // Dark theme
+  &.dark-theme {
+    background: $dt-dark-bg;
+    
+    .table-controls,
+    .table-footer {
+      background: $dt-dark-header;
+      border-color: $dt-dark-border;
+    }
+    
+    .table-wrapper {
+      thead {
+        background: $dt-dark-header;
+        
+        th {
+          color: $dt-dark-text;
+          border-color: $dt-dark-border;
+          
+          &.sorted {
+            background: rgba($dt-primary-color, 0.2);
+          }
+        }
+      }
+      
+      tbody {
+        tr {
+          border-color: $dt-dark-border;
+          
+          &:hover {
+            background: $dt-dark-hover;
+          }
+          
+          td {
+            color: $dt-dark-text;
+          }
+        }
+      }
+    }
+  }
+  
+  // Compact variant
+  &.compact {
+    .table-controls,
+    .table-footer {
+      padding: $dt-controls-padding-sm;
+    }
+    
+    .loading-spinner {
+      width: $dt-spinner-size-sm;
+      height: $dt-spinner-size-sm;
+    }
+    
+    th,
+    td {
+      padding: $dt-padding-sm;
+      font-size: $dt-font-size-sm;
+    }
+  }
+}
+
+// Table controls
+.table-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--dt-controls-padding, #{$dt-controls-padding});
+  background: var(--dt-header-bg, #{$dt-header-bg});
+  border-bottom: 1px solid var(--dt-border-color, #{$dt-border-color});
+  gap: 16px;
+  
+  .search-control {
+    flex: 1;
+    max-width: 400px;
+  }
+  
+  .pagination-controls {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Table wrapper
+.table-wrapper {
+  overflow-x: auto;
+  min-height: $dt-table-min-height;
+  flex: 1;
+  
+  // Custom scrollbar
+  @include dt-custom-scrollbar;
+}
+
+// Table styling
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+// Header
+thead {
+  background: var(--dt-header-bg, #{$dt-header-bg});
+}
+
+th {
+  padding: var(--dt-padding, #{$dt-padding});
+  text-align: left;
+  font-weight: $dt-font-weight-semibold;
+  color: var(--dt-text-color, #{$dt-text-color});
+  border-bottom: 2px solid var(--dt-border-color, #{$dt-border-color});
+  white-space: nowrap;
+  
+  &.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color $dt-transition-speed $dt-transition-timing;
+    
+    &:hover {
+      background: var(--dt-hover-color, #{$dt-hover-color});
+    }
+  }
+  
+  &.sorted {
+    color: var(--dt-primary-color, #{$dt-primary-color});
+    background: rgba(var(--dt-primary-color, #{$dt-primary-color}), 0.1);
+  }
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sort-indicator {
+  font-size: $dt-table-sort-indicator-size;
+  color: var(--dt-placeholder-color, #{$dt-placeholder-color});
+}
+
+// Body
+tbody {
+  tr {
+    border-bottom: 1px solid var(--dt-border-color, #{$dt-border-color});
+    transition: background-color $dt-transition-speed $dt-transition-timing;
+    
+    &:hover {
+      background: var(--dt-hover-color, #{$dt-hover-color});
+    }
+    
+    &.clickable {
+      cursor: pointer;
+      
+      &:hover {
+        background: darken($dt-hover-color, 5%);
+      }
+    }
+  }
+}
+
+td {
+  padding: var(--dt-padding, #{$dt-padding});
+  color: var(--dt-text-color, #{$dt-text-color});
+  font-size: var(--dt-font-size, #{$dt-font-size});
+  vertical-align: middle;
+}
+
+// Empty state
+.empty-row {
+  td {
+    padding: 60px 24px;
+    text-align: center;
+  }
+}
+
+.empty-state {
+  @include dt-flex-column;
+  @include dt-flex-center;
+  gap: 12px;
+}
+
+.empty-icon {
+  font-size: $dt-table-empty-icon-size;
+  opacity: 0.5;
+}
+
+.empty-subtext {
+  font-size: $dt-font-size-sm;
+  color: var(--dt-disabled-color, #{$dt-disabled-color});
+  margin: 0;
+}
+
+// Footer
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--dt-padding, #{$dt-padding});
+  background: var(--dt-header-bg, #{$dt-header-bg});
+  border-top: 1px solid var(--dt-border-color, #{$dt-border-color});
+  
+  .footer-left,
+  .footer-right {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Striped variant
+.striped {
+  tbody tr:nth-child(even) {
+    background: var(--dt-hover-color, #{$dt-hover-color});
+  }
+}
+
+// Responsive variant
+@media (max-width: $dt-breakpoint-md) {
+  .data-table.responsive {
+    .table-controls {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 12px;
+    }
+    
+    .search-control {
+      max-width: 100%;
+    }
+    
+    .table-footer {
+      flex-direction: column;
+      gap: 16px;
+      
+      .footer-left,
+      .footer-right {
+        justify-content: center;
+      }
+    }
+    
+    th,
+    td {
+      white-space: normal;
+    }
+    
+    td {
+      &::before {
+        content: attr(data-label);
+        display: block;
+        font-weight: $dt-font-weight-semibold;
+        color: var(--dt-text-color, #{$dt-text-color});
+        opacity: 0.7;
+        margin-bottom: 4px;
+        font-size: $dt-font-size-sm;
+      }
+    }
+  }
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  .data-table {
+    .table-wrapper tbody tr,
+    th.sortable {
+      transition: none;
+    }
+    
+    &.loading .loading-spinner {
+      animation: none;
+    }
+  }
+}
+
+// Print styles
+@media print {
+  .data-table {
+    box-shadow: none;
+    
+    .table-controls,
+    .table-footer {
+      display: none;
+    }
+  }
+}
