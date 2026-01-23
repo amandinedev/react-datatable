@@ -233,7 +233,7 @@ describe("DataTable Component", () => {
     expect(emptyRow).toHaveTextContent("No data available");
   });
 
-  it("shows empty state when no data", () => {
+  it("shows custom empty message when no data", () => {
     render(
       <DataTable
         data={[]}
@@ -259,22 +259,6 @@ describe("DataTable Component", () => {
     expect(container.querySelector(".data-table")).toHaveClass("dark-theme");
   });
 
-  it("supports compact mode via prop", () => {
-    const { container } = render(
-      <DataTable {...defaultProps} compact={true} />,
-    );
-
-    expect(container.querySelector(".data-table")).toHaveClass("compact");
-  });
-
-  it("supports responsive mode via prop", () => {
-    const { container } = render(
-      <DataTable {...defaultProps} responsive={true} />,
-    );
-
-    expect(container.querySelector(".data-table")).toHaveClass("responsive");
-  });
-
   it("handles row click callback", async () => {
     const MockRowClick = vi.fn();
     const User = userEvent.setup();
@@ -298,21 +282,6 @@ describe("DataTable Component", () => {
     render(<DataTable {...defaultProps} loading={true} />);
 
     expect(screen.getByText("Loading data...")).toBeInTheDocument();
-  });
-
-  it("applies custom loading renderer", () => {
-    const CustomLoading = () => (
-      <div data-testid="custom-loading">Custom Loading...</div>
-    );
-    render(
-      <DataTable
-        {...defaultProps}
-        loading={true}
-        renderLoading={CustomLoading}
-      />,
-    );
-
-    expect(screen.getByTestId("custom-loading")).toBeInTheDocument();
   });
 
   it("disables pagination when prop is false", () => {

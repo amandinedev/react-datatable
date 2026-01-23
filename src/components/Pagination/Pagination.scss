@@ -1,5 +1,9 @@
-// Pagination.scss
 @use '../../sass/abstracts' as *;
+@use "sass:color";
+
+// ============================================================================
+// PAGINATION COMPONENT
+// ============================================================================
 
 .pagination {
   display: flex;
@@ -8,11 +12,6 @@
   gap: $dt-pagination-gap;
   padding: 16px 0;
   flex-wrap: wrap;
-  
-  // Generate CSS custom properties
-  @each $name, $value in $dt-custom-properties {
-    --dt-#{$name}: #{$value};
-  }
   
   // Screen reader only utility
   .sr-only {
@@ -28,8 +27,11 @@
   }
 }
 
+// ============================================================================
+// PAGINATION BUTTONS (Navigation)
+// ============================================================================
+
 .pagination-button {
-  // Using dt-button-reset mixin
   padding: 0;
   border: none;
   background: none;
@@ -46,10 +48,10 @@
   align-items: center;
   justify-content: center;
   padding: 8px 16px;
-  border: $dt-input-border-width solid var(--dt-border-color, #{$dt-border-color});
-  background: var(--dt-bg-color, #{$dt-bg-color});
-  color: var(--dt-text-color, #{$dt-text-color});
-  font-size: var(--dt-font-size, #{$dt-font-size});
+  border: $dt-input-border-width solid $dt-border-color;
+  background: $dt-bg-color;
+  color: $dt-text-color;
+  font-size: $dt-font-size;
   font-weight: $dt-font-weight-semibold;
   border-radius: $dt-border-radius-sm;
   transition: all $dt-transition-speed $dt-transition-timing;
@@ -59,14 +61,11 @@
   position: relative;
   
   &:hover:not(:disabled) {
-    background: var(--dt-hover-color, #{$dt-hover-color});
-    border-color: var(--dt-primary-color, #{$dt-primary-color});
-    transform: translateY(-1px);
-    box-shadow: $dt-box-shadow;
+    @include dt-focus-outline;
   }
   
   &:focus {
-     @include dt-focus-outline;
+    @include dt-focus-outline;
   }
   
   &:active:not(:disabled) {
@@ -78,17 +77,8 @@
     color: $dt-disabled-color;
     cursor: not-allowed;
     opacity: 0.6;
-    background: lighten($dt-bg-color, 5%);
-    border-color: lighten($dt-border-color, 10%);
-  }
-  
-  // High contrast mode
-  @media (prefers-contrast: high) {
-    border-width: 3px;
-    
-    &:disabled {
-      border-style: dashed;
-    }
+    background: color.scale($dt-bg-color, $lightness: 5%);
+    border-color: color.scale($dt-border-color, $lightness:10%);
   }
   
   // Navigation buttons specific styles
@@ -97,6 +87,10 @@
     font-weight: $dt-font-weight-bold;
   }
 }
+
+// ============================================================================
+// PAGE NUMBERS CONTAINER
+// ============================================================================
 
 .page-numbers {
   display: flex;
@@ -108,8 +102,11 @@
   justify-content: center;
 }
 
+// ============================================================================
+// INDIVIDUAL PAGE NUMBER
+// ============================================================================
+
 .page-number {
-  // Using dt-button-reset pattern
   padding: 0;
   border: none;
   background: none;
@@ -120,10 +117,10 @@
   min-width: $dt-pagination-button-width;
   height: $dt-pagination-button-height;
   padding: 0 8px;
-  border: $dt-input-border-width solid var(--dt-border-color, #{$dt-border-color});
-  background: var(--dt-bg-color, #{$dt-bg-color});
-  color: var(--dt-text-color, #{$dt-text-color});
-  font-size: var(--dt-font-size, #{$dt-font-size});
+  border: $dt-input-border-width solid $dt-border-color;
+  background: $dt-bg-color;
+  color: $dt-text-color;
+  font-size: $dt-font-size;
   font-weight: $dt-font-weight-normal;
   border-radius: $dt-border-radius-sm;
   transition: all $dt-transition-speed $dt-transition-timing;
@@ -134,18 +131,13 @@
   position: relative;
   
   &:hover:not(.active) {
-    background: var(--dt-hover-color, #{$dt-hover-color});
-    border-color: var(--dt-primary-color, #{$dt-primary-color});
+    background: $dt-hover-color;
+    border-color: $dt-primary-color;
     transform: translateY(-1px);
   }
   
   &:focus {
-    // Using dt-focus-outline pattern
-    outline: 2px solid var(--dt-primary-color, #{$dt-primary-color});
-    outline-offset: 2px;
-    border-color: var(--dt-primary-color, #{$dt-primary-color});
-    box-shadow: $dt-box-shadow-focus;
-    z-index: 1;
+    @include dt-focus-outline;
   }
   
   &:active:not(.active) {
@@ -153,27 +145,19 @@
   }
   
   &.active {
-    background: $dt-pagination-active-bg;
-    color: $dt-pagination-active-color;
-    border-color: $dt-primary-color;
     font-weight: $dt-font-weight-bold;
     cursor: default;
     position: relative;
     
     &:focus {
-      outline-color: $dt-pagination-active-color;
-    }
-  }
-  
-  // High contrast mode
-  @media (prefers-contrast: high) {
-    border-width: 3px;
-    
-    &.active {
-      border-width: 4px;
+      @include dt-focus-outline;
     }
   }
 }
+
+// ============================================================================
+// PAGE ELLIPSIS
+// ============================================================================
 
 .page-ellipsis-item {
   display: inline-flex;
@@ -191,12 +175,15 @@
   height: $dt-pagination-button-height;
   color: $dt-disabled-color;
   user-select: none;
-  font-size: var(--dt-font-size, #{$dt-font-size});
+  font-size: $dt-font-size;
   font-weight: $dt-font-weight-bold;
 }
 
+// ============================================================================
+// PAGINATION STATUS (Screen Reader)
+// ============================================================================
+
 .pagination-status {
-  // Using sr-only pattern
   position: absolute;
   width: 1px;
   height: 1px;
@@ -208,11 +195,14 @@
   border: 0;
 }
 
-// Dark theme adjustment
+// ============================================================================
+// DARK THEME
+// ============================================================================
+
 .data-table.dark-theme {
   .pagination {
     .pagination-button {
-      background: lighten($dt-dark-bg, 5%);
+      background: color.scale($dt-dark-bg, $lightness: 5%);
       border-color: $dt-dark-border;
       color: $dt-dark-text;
       
@@ -222,14 +212,14 @@
       }
       
       &:disabled {
-        background: darken($dt-dark-bg, 5%);
-        color: lighten($dt-dark-text, 30%);
+        background: color.scale($dt-dark-bg, $lightness: -5%);
+        color: color.scale($dt-dark-text, $lightness: 30%);
         border-color: $dt-dark-border;
       }
     }
     
     .page-number {
-      background: lighten($dt-dark-bg, 5%);
+      background: color.scale($dt-dark-bg, $lightness: 5%);
       border-color: $dt-dark-border;
       color: $dt-dark-text;
       
@@ -250,12 +240,15 @@
     }
     
     .page-ellipsis {
-      color: lighten($dt-dark-text, 30%);
+      color: color.scale($dt-dark-text, $lightness: 30%);
     }
   }
 }
 
-// Compact theme adjustment
+// ============================================================================
+// COMPACT THEME
+// ============================================================================
+
 .data-table.compact {
   .pagination {
     padding: 8px 0;
@@ -323,6 +316,21 @@
   }
 }
 
+// ============================================================================
+// ACCESSIBILITY & REDUCED MOTION
+// ============================================================================
+
+// High contrast mode
+@media (prefers-contrast: high) {
+  .page-number {
+    border-width: 3px;
+    
+    &.active {
+      border-width: 4px;
+    }
+  }
+}
+
 // Reduced motion preference
 @media (prefers-reduced-motion: reduce) {
   .pagination {
@@ -334,14 +342,10 @@
   }
 }
 
-// Focus visible polyfill for older browsers
-.pagination-button:focus:not(:focus-visible),
-.page-number:focus:not(:focus-visible) {
-  outline: none;
-  box-shadow: none;
-}
+// ============================================================================
+// RESPONSIVE ADJUSTMENTS
+// ============================================================================
 
-// Responsive adjustments
 @media (min-width: $dt-breakpoint-sm) {
   .pagination {
     gap: 6px;
@@ -375,7 +379,10 @@
   }
 }
 
-// Print styles
+// ============================================================================
+// PRINT STYLES
+// ============================================================================
+
 @media print {
   .pagination {
     display: none;

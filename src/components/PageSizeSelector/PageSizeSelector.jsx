@@ -5,7 +5,6 @@ const PageSizeSelector = ({
   value,
   onChange,
   options = [5, 10, 25, 50, 100],
-  size = 'medium' // 'small' | 'medium' | 'large'
 }) => {
   const handleChange = (e) => {
     const newValue = parseInt(e.target.value, 10);
@@ -16,7 +15,7 @@ const PageSizeSelector = ({
 
   return (
     <div 
-      className={`page-size-selector size-${size}`}
+      className={`page-size-selector`}
       data-testid="page-size-selector"
     >
       <span className="page-size-selector__label">

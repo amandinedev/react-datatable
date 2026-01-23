@@ -1,8 +1,13 @@
 @use '../../sass/abstracts' as *;
+@use "sass:color";
+
+// ============================================================================
+// TABLE INFO COMPONENT
+// ============================================================================
 
 .table-info {
-  color: var(--dt-disabled-color, #{$dt-disabled-color});
-  font-size: var(--dt-font-size-sm, #{$dt-font-size-sm});
+  color: $dt-disabled-color;
+  font-size: $dt-font-size-sm;
   padding: 8px 0;
   margin: 0;
   display: flex;
@@ -11,66 +16,25 @@
   min-height: $dt-pagination-button-height;
   transition: color $dt-transition-speed $dt-transition-timing;
   
-  // Generate CSS custom properties like Pagination component
-  @each $name, $value in $dt-custom-properties {
-    --dt-#{$name}: #{$value};
-  }
-  
   // Accessibility - screen reader only class
   .sr-only {
     @include dt-sr-only;
   }
-  
-  // Responsive adjustments
-  @media (max-width: 480px) {
-    font-size: var(--dt-font-size-sm, #{$dt-font-size-sm});
-    justify-content: center;
-    text-align: center;
-  }
-  
-  // Print styles
-  @media print {
-    display: block;
-    color: #000;
-    font-size: 12px;
-  }
 }
 
-// Dark theme adjustment
+// ============================================================================
+// DARK THEME
+// ============================================================================
+
 .data-table.dark-theme {
   .table-info {
-    color: lighten($dt-dark-text, 30%);
-    
-    // Dark theme custom properties
-    --dt-disabled-color: #{lighten($dt-dark-text, 30%)};
+    color: color.scale($dt-dark-text, $lightness:30%);
   }
 }
 
-// Compact theme adjustment
-.data-table.compact {
-  .table-info {
-    padding: 4px 0;
-    font-size: $dt-font-size-sm;
-    min-height: $dt-pagination-button-height-sm;
-    
-    @media (max-width: 480px) {
-      font-size: 11px;
-      justify-content: center;
-    }
-  }
-}
-
-// High contrast mode
-@media (prefers-contrast: high) {
-  .table-info {
-    font-weight: $dt-font-weight-bold;
-    color: #000;
-    
-    .data-table.dark-theme & {
-      color: #fff;
-    }
-  }
-}
+// ============================================================================
+// ACCESSIBILITY & REDUCED MOTION
+// ============================================================================
 
 // Reduced motion preference
 @media (prefers-reduced-motion: reduce) {
@@ -79,7 +43,26 @@
   }
 }
 
-// Focus visible polyfill for consistency
-.table-info:focus {
-  outline: none;
+// ============================================================================
+// RESPONSIVE ADJUSTMENTS
+// ============================================================================
+
+@media (max-width: 480px) {
+  .table-info {
+    font-size: $dt-font-size-sm;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+// ============================================================================
+// PRINT STYLES
+// ============================================================================
+
+@media print {
+  .table-info {
+    display: block;
+    color: #000;
+    font-size: 12px;
+  }
 }

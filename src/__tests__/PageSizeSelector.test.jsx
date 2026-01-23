@@ -62,12 +62,6 @@ describe('PageSizeSelector Component', () => {
     expect(screen.getByText('entries')).toBeInTheDocument();
   });
 
-  it('applies size classes correctly', () => {
-    const { container } = renderComponent({ size: 'small' });
-    
-    expect(container.querySelector('.page-size-selector')).toHaveClass('size-small');
-  });
-
   it('accepts custom options', () => {
     renderComponent({ options: [20, 40, 60] });
     
@@ -114,12 +108,6 @@ describe('PageSizeSelector Component', () => {
     await user.keyboard('[Enter]');
     
     expect(mockOnChange).toHaveBeenCalledWith(25);
-  });
-
-  it('renders with custom size prop', () => {
-    const { container } = renderComponent({ size: 'large' });
-    
-    expect(container.querySelector('.page-size-selector')).toHaveClass('size-large');
   });
 
   it('handles null onChange gracefully', () => {

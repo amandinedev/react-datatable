@@ -1,56 +1,99 @@
 @use '../../sass/abstracts' as *;
+@use "sass:color";
+
+// ============================================================================
+// PAGE SIZE SELECTOR COMPONENT
+// ============================================================================
 
 .page-size-selector {
   display: flex;
   align-items: center;
   gap: $dt-page-selector-gap;
-  
-  // Generate CSS custom properties
-  @each $name, $value in $dt-custom-properties {
-    --dt-#{$name}: #{$value};
+  font-family: $dt-font-family;
+  font-size: $dt-font-size;
+  line-height: $dt-line-height;
+  transition: all $dt-transition-speed $dt-transition-timing;
+
+  // Responsive adjustments
+  @include dt-media(mobile) {
+    gap: $dt-page-selector-gap-sm;
+    width: 100%;
   }
 }
 
+// ============================================================================
+// LABEL STYLING
+// ============================================================================
+
 .page-size-selector__label {
-  color: var(--dt-text-color, #{$dt-text-color});
+  color: $dt-text-color;
   font-weight: $dt-font-weight-normal;
   white-space: nowrap;
   font-size: inherit;
+  user-select: none;
+  
+  @include dt-media(mobile) {
+    flex-shrink: 0;
+  }
 }
+
+// ============================================================================
+// SELECT WRAPPER & DROPDOWN
+// ============================================================================
 
 .page-size-selector__wrapper {
   position: relative;
   display: inline-block;
+  min-width: $dt-page-selector-min-width;
+  
+  @include dt-media(mobile) {
+    flex: 1;
+    min-width: auto;
+  }
 }
 
 .page-size-selector__select {
   width: 100%;
   padding: 8px 32px 8px 12px;
-  border: $dt-input-border-width solid var(--dt-border-color, #{$dt-border-color});
+  border: $dt-input-border-width solid $dt-border-color;
   border-radius: $dt-border-radius-sm;
-  background: var(--dt-bg-color, #{$dt-bg-color});
-  color: var(--dt-text-color, #{$dt-text-color});
+  background: $dt-bg-color;
+  color: $dt-text-color;
   font-family: $dt-font-family;
   cursor: pointer;
   transition: all $dt-transition-speed $dt-transition-timing;
   appearance: none;
-  min-width: $dt-page-selector-min-width;
   font-size: inherit;
+  line-height: inherit;
   
+  // Focus state
   &:focus {
-   border-color: var(--dt-primary-color, #{$dt-primary-color});
+    @include dt-focus-outline;
+    border-color: $dt-primary-color;
   }
   
+  // Hover state
   &:hover:not(:disabled) {
-    border-color: var(--dt-primary-color, #{$dt-primary-color});
+    border-color: color.scale($dt-border-color, $lightness: -20%);
+    background: color.scale($dt-bg-color, $lightness: -2%);
   }
   
+  // Disabled state
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    background-color: lighten($dt-bg-color, 5%);
+    background-color: color.scale($dt-bg-color, $lightness: 5%);
+  }
+  
+  // Active state
+  &:active:not(:disabled) {
+    transform: translateY(1px);
   }
 }
+
+// ============================================================================
+// DROPDOWN ARROW
+// ============================================================================
 
 .page-size-selector__arrow {
   position: absolute;
@@ -58,107 +101,138 @@
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
-  color: var(--dt-text-color, #{$dt-text-color});
+  color: $dt-text-color;
   opacity: 0.6;
   font-size: 0.75em;
+  transition: transform $dt-transition-speed $dt-transition-timing;
+  
+  .page-size-selector__select:focus + &,
+  .page-size-selector__select:hover + & {
+    opacity: 0.8;
+  }
+  
+  .page-size-selector__select:active + & {
+    transform: translateY(-50%) rotate(180deg);
+  }
 }
 
-// Size variants
+// ============================================================================
+// SIZE VARIANTS
+// ============================================================================
+
+// Small variant
 .size-small {
   font-size: $dt-font-size-sm;
   
   .page-size-selector__select {
     padding: 6px 28px 6px 10px;
     min-width: $dt-page-selector-min-width-sm;
+    border-radius: $dt-border-radius-sm;
   }
   
   .page-size-selector__arrow {
     right: 10px;
+    font-size: 0.7em;
   }
 }
 
+// Large variant
 .size-large {
   font-size: $dt-font-size-lg;
   
   .page-size-selector__select {
     padding: 10px 36px 10px 14px;
     min-width: $dt-page-selector-min-width-lg;
+    border-radius: $dt-border-radius;
   }
   
   .page-size-selector__arrow {
     right: 14px;
+    font-size: 0.8em;
   }
 }
 
-// Dark theme
+// ============================================================================
+// DARK THEME
+// ============================================================================
+
 .data-table.dark-theme {
-  .page-size-selector__label {
-    color: $dt-dark-text;
+  .page-size-selector {
+    .page-size-selector__label {
+      color: $dt-dark-text;
+    }
+    
+    .page-size-selector__select {
+      background: color.scale($dt-dark-bg, $lightness: 5%);
+      border-color: $dt-dark-border;
+      color: $dt-dark-text;
+      
+      &:focus {
+        border-color: $dt-primary-color-light;
+        @include dt-focus-outline;
+      }
+      
+      &:hover:not(:disabled) {
+        background: color.scale($dt-dark-bg, $lightness: 8%);
+        border-color: color.scale($dt-dark-border, $lightness: 20%);
+      }
+      
+      &:disabled {
+        background-color: color.scale($dt-dark-bg, $lightness: 2%);
+      }
+    }
+    
+    .page-size-selector__arrow {
+      color: $dt-dark-text;
+      
+      .page-size-selector__select:focus + &,
+      .page-size-selector__select:hover + & {
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+// ============================================================================
+// ACCESSIBILITY & REDUCED MOTION
+// ============================================================================
+
+@media (prefers-reduced-motion: reduce) {
+  .page-size-selector,
+  .page-size-selector__select,
+  .page-size-selector__arrow {
+    transition: none;
   }
   
-  .page-size-selector__select {
-    background: lighten($dt-dark-bg, 5%);
-    border-color: $dt-dark-border;
-    color: $dt-dark-text;
+  .page-size-selector__select:active:not(:disabled) {
+    transform: none;
   }
   
   .page-size-selector__arrow {
-    color: $dt-dark-text;
-  }
-}
-
-// Compact theme
-.data-table.compact {
-  .page-size-selector {
-    gap: $dt-page-selector-gap-sm;
-    
-    .page-size-selector__select {
-      padding: 6px 28px 6px 10px;
+    .page-size-selector__select:active + & {
+      transform: translateY(-50%);
     }
   }
 }
 
-// Reduced motion
-@media (prefers-reduced-motion: reduce) {
+// High contrast mode
+@media (prefers-contrast: high) {
   .page-size-selector__select {
-    transition: none;
+    border-width: 2px;
+    
+    &:focus {
+      outline-width: 3px;
+      outline-offset: 1px;
+    }
   }
 }
 
-// Focus visible polyfill
-.page-size-selector__select:focus:not(:focus-visible) {
-  outline: none;
-  box-shadow: none;
-}
+// ============================================================================
+// PRINT STYLES
+// ============================================================================
 
-// Print styles
 @media print {
   .page-size-selector {
     display: none;
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 480px) {
-  .page-size-selector {
-    gap: 4px;
-    
-    .page-size-selector__select {
-      min-width: $dt-page-selector-min-width-sm;
-      padding: 6px 28px 6px 10px;
-    }
-    
-    .page-size-selector__label {
-      // Hide text on mobile
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
   }
 }

@@ -1,4 +1,9 @@
 @use '../../sass/abstracts' as *;
+@use "sass:color";
+
+// ============================================================================
+// SEARCH BAR COMPONENT
+// ============================================================================
 
 .search-bar {
   display: flex;
@@ -8,13 +13,22 @@
   width: 100%;
 }
 
+// ============================================================================
+// SEARCH LABEL
+// ============================================================================
+
 .search-label {
-  color: $dt-disabled-color;
+  color: $dt-text-color;
+  font-weight: $dt-font-weight-normal;
   font-size: $dt-font-size;
   white-space: nowrap;
   cursor: default;
   user-select: none;
 }
+
+// ============================================================================
+// SEARCH INPUT WRAPPER
+// ============================================================================
 
 .search-input-wrapper {
   position: relative;
@@ -22,6 +36,10 @@
   display: flex;
   align-items: center;
 }
+
+// ============================================================================
+// SEARCH INPUT FIELD
+// ============================================================================
 
 .search-input {
   width: 100%;
@@ -34,7 +52,7 @@
   transition: all $dt-transition-speed $dt-transition-timing;
   
   &:focus {
-    border-color: var(--dt-primary-color, #{$dt-primary-color});
+    @include dt-focus-outline;
   }
   
   &::placeholder {
@@ -55,6 +73,10 @@
     @include dt-truncate;
   }
 }
+
+// ============================================================================
+// CLEAR BUTTON
+// ============================================================================
 
 .search-clear {
   position: absolute;
@@ -85,19 +107,22 @@
   }
 }
 
-// Dark theme adjustment
+// ============================================================================
+// DARK THEME
+// ============================================================================
+
 .data-table.dark-theme .search-bar {
   .search-label {
-    color: lighten($dt-dark-text, 30%);
+    color: color.scale($dt-dark-text, $lightness: 30%);
   }
   
   .search-input {
-    background: lighten($dt-dark-bg, 5%);
+    background: color.scale($dt-dark-bg, $lightness:5%);
     border-color: $dt-dark-border;
     color: $dt-dark-text;
     
     &::placeholder {
-      color: lighten($dt-dark-text, 30%);
+      color: color.scale($dt-dark-text, $lightness:30%);
     }
     
     &:focus {
@@ -107,7 +132,7 @@
   }
   
   .search-clear {
-    color: lighten($dt-dark-text, 30%);
+    color: color.scale($dt-dark-text, $lightness:30%);
     
     &:hover {
       color: $dt-dark-text;
@@ -116,26 +141,26 @@
   }
 }
 
-// Compact theme adjustment
-.data-table.compact .search-bar {
-  .search-label {
-    font-size: $dt-font-size-sm;
-  }
-  
-  .search-input {
-    padding: 6px 28px 6px 10px;
-    font-size: $dt-font-size-sm;
-  }
-  
+// ============================================================================
+// ACCESSIBILITY & REDUCED MOTION
+// ============================================================================
+
+// Reduced motion preference
+@media (prefers-reduced-motion: reduce) {
+  .search-input,
   .search-clear {
-    font-size: 14px;
-    width: 20px;
-    height: 20px;
-    right: 6px;
+    transition: none;
+  }
+  
+  .search-clear:active {
+    transform: none;
   }
 }
 
-// Responsive adjustments
+// ============================================================================
+// RESPONSIVE ADJUSTMENTS
+// ============================================================================
+
 @include dt-media(sm) {
   .search-bar {
     gap: 4px;
@@ -150,6 +175,16 @@
 // Hide label on very small screens
 @media (max-width: 480px) {
   .search-bar.hide-label-on-mobile .search-label {
+    display: none;
+  }
+}
+
+// ============================================================================
+// PRINT STYLES
+// ============================================================================
+
+@media print {
+  .search-bar {
     display: none;
   }
 }

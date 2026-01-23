@@ -1,11 +1,10 @@
-// _mixins.scss
 @use 'variables' as *;
+@use "sass:color";
 
 // ============================================================================
 // MEDIA QUERIES
 // ============================================================================
 
-// Media query mixin for common breakpoints
 @mixin dt-media($breakpoint) {
   @if $breakpoint == xs {
     @media (min-width: $dt-breakpoint-xs) { @content; }
@@ -28,41 +27,16 @@
   }
 }
 
-// Generate CSS custom properties
-@mixin dt-generate-custom-properties() {
-  @each $name, $value in $dt-custom-properties {
-    --dt-#{$name}: #{$value};
-  }
-}
-
-// Generate CSS custom properties with prefix
-@mixin dt-generate-custom-properties-prefix($prefix) {
-  @each $name, $value in $dt-custom-properties {
-    --#{$prefix}-#{$name}: #{$value};
-  }
-}
-
 // ============================================================================
 // TYPOGRAPHY
 // ============================================================================
 
-// Truncate text with ellipsis
 @mixin dt-truncate {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-// Multi-line truncate
-@mixin dt-truncate-multiline($lines: 2) {
-  display: -webkit-box;
-  -webkit-line-clamp: $lines;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-// Font smoothing
 @mixin dt-font-smoothing {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -72,19 +46,11 @@
 // ACCESSIBILITY
 // ============================================================================
 
-// Focus outline (accessibility)
 @mixin dt-focus-outline {
-  outline: 2px solid var(--dt-primary-color, #{$dt-primary-color});
+  outline: 3px solid $dt-primary-color;
   outline-offset: 2px;
 }
 
-// Focus outline with box shadow
-@mixin dt-focus-outline-shadow {
-  @include dt-focus-outline;
-  box-shadow: 0 0 0 3px rgba($dt-primary-color, 0.2);
-}
-
-// Screen reader only
 @mixin dt-sr-only {
   position: absolute;
   width: 1px;
@@ -97,16 +63,10 @@
   border: 0;
 }
 
-// Visually hidden but accessible
-@mixin dt-visually-hidden {
-  @include dt-sr-only;
-}
-
 // ============================================================================
 // ANIMATIONS & TRANSITIONS
 // ============================================================================
 
-// Loading animation
 @mixin dt-loading-animation {
   animation: dt-spin 1s linear infinite;
   
@@ -116,124 +76,41 @@
   }
 }
 
-// Fade in animation
-@mixin dt-fade-in($duration: 0.3s) {
-  animation: dt-fade-in $duration ease-in-out;
-  
-  @keyframes dt-fade-in {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-}
-
-// Slide in animation
-@mixin dt-slide-in($direction: 'up', $distance: 20px, $duration: 0.3s) {
-  animation: dt-slide-in-#{$direction} $duration ease-out;
-  
-  @if $direction == 'up' {
-    @keyframes dt-slide-in-up {
-      from {
-        opacity: 0;
-        transform: translateY($distance);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  } @else if $direction == 'down' {
-    @keyframes dt-slide-in-down {
-      from {
-        opacity: 0;
-        transform: translateY(-$distance);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-  } @else if $direction == 'left' {
-    @keyframes dt-slide-in-left {
-      from {
-        opacity: 0;
-        transform: translateX($distance);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-  } @else if $direction == 'right' {
-    @keyframes dt-slide-in-right {
-      from {
-        opacity: 0;
-        transform: translateX(-$distance);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
-  }
-}
-
-// Reduce motion support
-@mixin dt-reduce-motion {
-  @media (prefers-reduced-motion: reduce) {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
 // ============================================================================
 // SCROLLBARS
 // ============================================================================
 
-// Custom scrollbar styling
-@mixin dt-custom-scrollbar($size: 8px) {
+@mixin dt-custom-scrollbar($size: 10px) {
   &::-webkit-scrollbar {
     width: $size;
     height: $size;
   }
   
   &::-webkit-scrollbar-track {
-    background: var(--dt-hover-color, #{$dt-hover-color});
-    border-radius: var(--dt-border-radius-sm, #{$dt-border-radius-sm});
+    background: $dt-hover-color;
+    border-radius: $dt-border-radius-sm;
   }
   
   &::-webkit-scrollbar-thumb {
-    background: lighten($dt-border-color, 10%);
-    border-radius: var(--dt-border-radius-sm, #{$dt-border-radius-sm});
+    background: $dt-border-color;
+    border-radius: $dt-border-radius-sm;
     
     &:hover {
-      background: var(--dt-border-color, #{$dt-border-color});
+      background: color.scale($dt-border-color, $lightness: -15%);
     }
   }
   
-  // Firefox
   scrollbar-width: thin;
-  scrollbar-color: lighten($dt-border-color, 10%) var(--dt-hover-color, #{$dt-hover-color});
-}
-
-// Hide scrollbar but keep functionality
-@mixin dt-hide-scrollbar {
-  -ms-overflow-style: none;  // IE and Edge
-  scrollbar-width: none;     // Firefox
-  
-  &::-webkit-scrollbar {
-    display: none;  // Chrome, Safari and Opera
-  }
+  scrollbar-color: $dt-border-color $dt-hover-color;
 }
 
 // ============================================================================
 // COMPONENT RESETS & UTILITIES
 // ============================================================================
 
-// Button reset
 @mixin dt-button-reset {
-  padding: 0;
-  border: none;
+  padding: 12px 16px;
+  border: 2px solid transparent;
   background: none;
   cursor: pointer;
   font: inherit;
@@ -243,177 +120,43 @@
   display: inline-block;
   line-height: inherit;
   margin: 0;
+  min-height: 48px;
+  min-width: 48px;
 }
 
-// Input reset
 @mixin dt-input-reset {
-  padding: 0;
-  border: none;
-  background: none;
+  padding: $dt-input-padding;
+  border: $dt-input-border-width solid $dt-border-color;
+  background: $dt-bg-color;
   font: inherit;
   color: inherit;
   margin: 0;
   appearance: none;
-  border-radius: 0;
+  border-radius: $dt-border-radius-sm;
   width: 100%;
   
   &:focus {
-    outline: none;
+    @include dt-focus-outline;
+    border-color: $dt-border-color;
   }
-}
-
-// Select reset
-@mixin dt-select-reset {
-  @include dt-input-reset;
-  cursor: pointer;
-  
-  // Remove default arrow
-  &::-ms-expand {
-    display: none;
-  }
-  
-  // Remove default styling in Firefox
-  background-image: none;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-// List reset
-@mixin dt-list-reset {
-  list-style: none;
-  margin: 0;
-  padding: 0;
 }
 
 // ============================================================================
 // LAYOUT & FLEXBOX
 // ============================================================================
 
-// Flex center (both axes)
 @mixin dt-flex-center {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-// Flex column
 @mixin dt-flex-column {
   display: flex;
   flex-direction: column;
 }
 
-// Flex row
 @mixin dt-flex-row {
   display: flex;
   flex-direction: row;
-}
-
-// Flex gap (with fallback for older browsers)
-@mixin dt-flex-gap($gap) {
-  gap: $gap;
-  
-  @supports not (gap: $gap) {
-    > * + * {
-      margin-left: $gap;
-    }
-  }
-}
-
-// ============================================================================
-// STATES & PSEUDO-ELEMENTS
-// ============================================================================
-
-// Hover, focus, active states
-@mixin dt-interactive-states {
-  &:hover:not(:disabled):not(.is-disabled) {
-    @content;
-  }
-  
-  &:focus:not(:disabled):not(.is-disabled) {
-    @content;
-  }
-  
-  &:active:not(:disabled):not(.is-disabled) {
-    @content;
-  }
-}
-
-// Disabled state
-@mixin dt-disabled-state {
-  &:disabled,
-  &.is-disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-}
-
-// ============================================================================
-// THEMING
-// ============================================================================
-
-// Dark theme variant
-@mixin dt-dark-theme {
-  &.dark-theme {
-    @content;
-  }
-}
-
-// Compact theme variant
-@mixin dt-compact-theme {
-  .data-table.compact &,
-  &.compact {
-    @content;
-  }
-}
-
-// High contrast mode
-@mixin dt-high-contrast {
-  @media (prefers-contrast: high) {
-    @content;
-  }
-}
-
-// Print styles
-@mixin dt-print-styles {
-  @media print {
-    @content;
-  }
-}
-
-// ============================================================================
-// RESPONSIVE UTILITIES
-// ============================================================================
-
-// Hide on mobile
-@mixin dt-hide-on-mobile {
-  @include dt-media(mobile) {
-    display: none !important;
-  }
-}
-
-// Hide on desktop
-@mixin dt-hide-on-desktop {
-  @include dt-media(desktop) {
-    display: none !important;
-  }
-}
-
-// Show only on mobile
-@mixin dt-show-only-on-mobile {
-  display: none !important;
-  
-  @include dt-media(mobile) {
-    display: block !important;
-  }
-}
-
-// Show only on desktop
-@mixin dt-show-only-on-desktop {
-  display: none !important;
-  
-  @include dt-media(desktop) {
-    display: block !important;
-  }
 }

@@ -1,320 +1,576 @@
 @use '../../sass/abstracts' as *;
+@use "sass:color";
+
+
+// ============================================================================
+// DATA TABLE BASE STYLES
+// ============================================================================
 
 .data-table {
   font-family: $dt-font-family;
-  background: var(--dt-bg-color, #{$dt-bg-color});
-  border-radius: var(--dt-border-radius, #{$dt-border-radius});
-  box-shadow: var(--dt-box-shadow, #{$dt-box-shadow});
+  font-size: $dt-font-size;
+  line-height: $dt-line-height;
+  color: $dt-text-color;
+  background: $dt-bg-color;
+  border-radius: $dt-border-radius;
+  box-shadow: $dt-box-shadow;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  
-  // Generate CSS custom properties
-  @each $name, $value in $dt-custom-properties {
-    --dt-#{$name}: #{$value};
-  }
-  
+  transition: all $dt-transition-speed $dt-transition-timing;
+
   // Loading state
   &.loading {
+    min-height: $dt-table-loading-height;
     @include dt-flex-center;
     @include dt-flex-column;
-    min-height: $dt-table-loading-height;
-    gap: 16px;
-    
+    gap: $dt-pagination-gap;
+
     .loading-spinner {
       width: $dt-spinner-size;
       height: $dt-spinner-size;
-      border: $dt-spinner-border-width solid var(--dt-border-color, #{$dt-border-color});
-      border-top: $dt-spinner-border-width solid var(--dt-primary-color, #{$dt-primary-color});
+      border: $dt-spinner-border-width solid $dt-spinner-border-color;
+      border-top-color: $dt-spinner-border-active-color;
       border-radius: 50%;
       @include dt-loading-animation;
     }
-    
+
     p {
-      color: var(--dt-text-color, #{$dt-text-color});
-      opacity: 0.7;
       margin: 0;
-    }
-  }
-  
-  // Dark theme
-  &.dark-theme {
-    background: $dt-dark-bg;
-    
-    .table-controls,
-    .table-footer {
-      background: $dt-dark-header;
-      border-color: $dt-dark-border;
-    }
-    
-    .table-wrapper {
-      thead {
-        background: $dt-dark-header;
-        
-        th {
-          color: $dt-dark-text;
-          border-color: $dt-dark-border;
-          
-          &.sorted {
-            background: rgba($dt-primary-color, 0.2);
-          }
-        }
-      }
-      
-      tbody {
-        tr {
-          border-color: $dt-dark-border;
-          
-          &:hover {
-            background: $dt-dark-hover;
-          }
-          
-          td {
-            color: $dt-dark-text;
-          }
-        }
-      }
-    }
-  }
-  
-  // Compact variant
-  &.compact {
-    .table-controls,
-    .table-footer {
-      padding: $dt-controls-padding-sm;
-    }
-    
-    .loading-spinner {
-      width: $dt-spinner-size-sm;
-      height: $dt-spinner-size-sm;
-    }
-    
-    th,
-    td {
-      padding: $dt-padding-sm;
-      font-size: $dt-font-size-sm;
+      color: $dt-text-color;
+      font-weight: $dt-font-weight-semibold;
     }
   }
 }
 
-// Table controls
+// ============================================================================
+// TABLE CONTROLS
+// ============================================================================
+
 .table-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--dt-controls-padding, #{$dt-controls-padding});
-  background: var(--dt-header-bg, #{$dt-header-bg});
-  border-bottom: 1px solid var(--dt-border-color, #{$dt-border-color});
-  gap: 16px;
-  
+  padding: $dt-controls-padding;
+  border-bottom: 1px solid $dt-border-color;
+  gap: $dt-page-selector-gap;
+  flex-wrap: wrap;
+
+  @include dt-media(mobile) {
+    padding: $dt-controls-padding-sm;
+    flex-direction: column;
+    align-items: stretch;
+    gap: $dt-page-selector-gap-sm;
+  }
+
+  .pagination-controls {
+    flex-shrink: 0;
+  }
+
   .search-control {
     flex: 1;
-    max-width: 400px;
-  }
-  
-  .pagination-controls {
-    display: flex;
-    align-items: center;
+    min-width: 200px;
+
+    @include dt-media(mobile) {
+      min-width: 100%;
+    }
   }
 }
 
-// Table wrapper
+// ============================================================================
+// TABLE WRAPPER
+// ============================================================================
+
 .table-wrapper {
   overflow-x: auto;
   min-height: $dt-table-min-height;
-  flex: 1;
-  
-  // Custom scrollbar
   @include dt-custom-scrollbar;
 }
 
-// Table styling
+// ============================================================================
+// TABLE STRUCTURE
+// ============================================================================
+
 table {
   width: 100%;
   border-collapse: collapse;
-}
+  border-spacing: 0;
+  background: $dt-bg-color;
 
-// Header
-thead {
-  background: var(--dt-header-bg, #{$dt-header-bg});
-}
+  // Table header
+  thead {
+    background: $dt-header-bg;
+    border-bottom: 2px solid $dt-border-color;
 
-th {
-  padding: var(--dt-padding, #{$dt-padding});
-  text-align: left;
-  font-weight: $dt-font-weight-semibold;
-  color: var(--dt-text-color, #{$dt-text-color});
-  border-bottom: 2px solid var(--dt-border-color, #{$dt-border-color});
-  white-space: nowrap;
-  
-  &.sortable {
-    cursor: pointer;
-    user-select: none;
-    transition: background-color $dt-transition-speed $dt-transition-timing;
-    
-    &:hover {
-      background: var(--dt-hover-color, #{$dt-hover-color});
+    tr {
+      th {
+        padding: $dt-padding;
+        text-align: left;
+        font-weight: $dt-font-weight-semibold;
+        position: relative;
+        user-select: none;
+        border-right: 1px solid $dt-border-color;
+        background: $dt-header-bg; // Explicit header cell background
+
+        &:last-child {
+          border-right: none;
+        }
+
+        &.sortable {
+          cursor: pointer;
+          transition: background-color $dt-transition-speed $dt-transition-timing;
+
+          &:hover,
+          &:focus {
+            background: color.scale($dt-hover-color, $lightness: -10%);
+          }
+
+          &:focus {
+            @include dt-focus-outline;
+            z-index: 1;
+          }
+
+          .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+          }
+
+          .sort-indicator {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: $dt-table-sort-indicator-size + 8px;
+            height: $dt-table-sort-indicator-size + 4px;
+            flex-shrink: 0;
+          }
+
+          .sort-arrow-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 2px 0;
+          }
+
+          .sort-arrow-up,
+          .sort-arrow-down {
+            font-size: 10px;
+            line-height: 1;
+            color: color.scale($dt-text-color, $lightness: 40%);
+            opacity: 0.5;
+            transition: all $dt-transition-speed $dt-transition-timing;
+            display: block;
+            
+            &.active {
+              color: $dt-primary-color;
+              opacity: 1;
+            }
+          }
+
+          &:hover {
+            .sort-arrow-up:not(.active),
+            .sort-arrow-down:not(.active) {
+              opacity: 0.8;
+            }
+          }
+
+          &.sorted {
+            .sort-arrow-up:not(.active),
+            .sort-arrow-down:not(.active) {
+              opacity: 0;
+            }
+          }
+
+          &:not(.sorted) {
+            .sort-arrow-up,
+            .sort-arrow-down {
+              opacity: 0.3;
+                   
+              
+              &:hover {
+                opacity: 0.8;
+                     
+              }
+            }
+          }
+        }
+
+        &:not(.sortable) {
+          .header-content {
+            display: block;
+          }
+        }
+      }
     }
   }
-  
-  &.sorted {
-    color: var(--dt-primary-color, #{$dt-primary-color});
-    background: rgba(var(--dt-primary-color, #{$dt-primary-color}), 0.1);
-  }
-}
 
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
+  // Table body
+  tbody {
+    background: $dt-bg-color;
 
-.sort-indicator {
-  font-size: $dt-table-sort-indicator-size;
-  color: var(--dt-placeholder-color, #{$dt-placeholder-color});
-}
+    tr {
+      height: $dt-table-row-height;
+      transition: background-color $dt-transition-speed $dt-transition-timing;
+      background: $dt-bg-color; // Explicit row background
 
-// Body
-tbody {
-  tr {
-    border-bottom: 1px solid var(--dt-border-color, #{$dt-border-color});
-    transition: background-color $dt-transition-speed $dt-transition-timing;
-    
-    &:hover {
-      background: var(--dt-hover-color, #{$dt-hover-color});
-    }
-    
-    &.clickable {
-      cursor: pointer;
-      
       &:hover {
-        background: darken($dt-hover-color, 5%);
+        background: color.scale($dt-hover-color, $lightness: -20%) !important;
+      }
+
+      &.clickable {
+        cursor: pointer;
+
+        &:hover {
+          background: color.scale($dt-hover-color, $lightness: -30%) !important;
+        }
+      }
+
+      // Striped rows
+      .data-table.striped & {
+        &:nth-child(even) {
+          background: color.scale($dt-hover-color, $lightness: 5%);
+
+          &:hover {
+            background: color.scale($dt-hover-color, $lightness: -15%) !important;
+          }
+        }
+
+        &:nth-child(odd) {
+          background: $dt-bg-color;
+
+          &:hover {
+            background: color.scale($dt-hover-color, $lightness: -20%) !important;
+          }
+        }
+      }
+
+      td {
+        padding: $dt-padding;
+        border-bottom: 1px solid $dt-border-color;
+        border-right: 1px solid $dt-border-color;
+        background: inherit; // Inherit background from parent tr
+
+        &:last-child {
+          border-right: none;
+        }
+      }
+
+      &:last-child {
+        td {
+          border-bottom: none;
+        }
+      }
+    }
+
+    // Empty state
+    .empty-row {
+      height: $dt-table-loading-height;
+      background: $dt-bg-color;
+
+      td {
+        background: $dt-bg-color;
+        text-align: center;
+        padding: $dt-controls-padding;
+        border: none;
+      }
+
+      .empty-state {
+        @include dt-flex-center;
+        @include dt-flex-column;
+        gap: $dt-pagination-gap;
+
+        .empty-icon {
+          font-size: $dt-table-empty-icon-size;
+          opacity: 0.5;
+        }
+
+        p {
+          margin: 0;
+          color: $dt-text-color;
+          font-size: $dt-font-size-lg;
+          font-weight: $dt-font-weight-semibold;
+        }
+
+        .empty-subtext {
+          font-size: $dt-font-size;
+          font-weight: $dt-font-weight-normal;
+          color: $dt-placeholder-color;
+        }
       }
     }
   }
 }
 
-td {
-  padding: var(--dt-padding, #{$dt-padding});
-  color: var(--dt-text-color, #{$dt-text-color});
-  font-size: var(--dt-font-size, #{$dt-font-size});
-  vertical-align: middle;
-}
+// ============================================================================
+// TABLE FOOTER
+// ============================================================================
 
-// Empty state
-.empty-row {
-  td {
-    padding: 60px 24px;
-    text-align: center;
-  }
-}
-
-.empty-state {
-  @include dt-flex-column;
-  @include dt-flex-center;
-  gap: 12px;
-}
-
-.empty-icon {
-  font-size: $dt-table-empty-icon-size;
-  opacity: 0.5;
-}
-
-.empty-subtext {
-  font-size: $dt-font-size-sm;
-  color: var(--dt-disabled-color, #{$dt-disabled-color});
-  margin: 0;
-}
-
-// Footer
 .table-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--dt-padding, #{$dt-padding});
-  background: var(--dt-header-bg, #{$dt-header-bg});
-  border-top: 1px solid var(--dt-border-color, #{$dt-border-color});
-  
+  padding: $dt-controls-padding;
+  border-top: 1px solid $dt-border-color;
+  flex-wrap: wrap;
+  gap: $dt-pagination-gap;
+
+  @include dt-media(mobile) {
+    padding: $dt-controls-padding-sm;
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+    gap: $dt-pagination-gap-sm;
+  }
+
   .footer-left,
   .footer-right {
-    display: flex;
-    align-items: center;
+    flex-shrink: 0;
+  }
+
+  .footer-left {
+    @include dt-media(mobile) {
+      order: 2;
+    }
+  }
+
+  .footer-right {
+    @include dt-media(mobile) {
+      order: 1;
+    }
   }
 }
 
-// Striped variant
-.striped {
-  tbody tr:nth-child(even) {
-    background: var(--dt-hover-color, #{$dt-hover-color});
-  }
-}
+// ============================================================================
+// DARK THEME
+// ============================================================================
 
-// Responsive variant
-@media (max-width: $dt-breakpoint-md) {
-  .data-table.responsive {
-    .table-controls {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 12px;
-    }
-    
-    .search-control {
-      max-width: 100%;
-    }
-    
-    .table-footer {
-      flex-direction: column;
-      gap: 16px;
+.data-table.dark-theme {
+  background: $dt-dark-bg;
+  color: $dt-dark-text;
+
+  .table-controls,
+  .table-footer {
+    border-color: $dt-dark-border;
+    background: $dt-dark-header;
+  }
+
+  // Explicitly target the table and all its cells
+  .table-wrapper {
+    table {
+      background: $dt-dark-bg;
       
-      .footer-left,
-      .footer-right {
-        justify-content: center;
+      // Table header in dark theme
+      thead {
+        background: $dt-dark-header;
+        border-bottom-color: $dt-dark-border;
+
+        tr {
+          th {
+            border-right-color: $dt-dark-border;
+            color: #FFFFFF;
+            font-weight: $dt-font-weight-semibold;
+            background: $dt-dark-header !important; // Force dark header
+
+            &.sortable {
+              &:hover,
+              &:focus {
+                background: color.scale($dt-dark-header, $lightness: 10%) !important;
+              }
+
+              .sort-arrow-up,
+              .sort-arrow-down {
+                color: rgba(255, 255, 255, 0.6);
+
+                &.active {
+                  color: $dt-primary-color-light;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Table body in dark theme
+      tbody {
+        background: $dt-dark-bg !important;
+
+        tr {
+          height: $dt-table-row-height;
+          background: $dt-dark-cell-bg !important; // DARK GREY CELLS - FORCE IT
+
+          &:hover {
+            background: color.scale($dt-dark-cell-bg, $lightness: 8%) !important;
+          }
+
+          &.clickable {
+            &:hover {
+              background: color.scale($dt-dark-cell-bg, $lightness: 12%) !important;
+            }
+          }
+
+          // Striped rows for dark theme
+          &.even,
+          &:nth-child(even) {
+            background: $dt-dark-cell-striped !important;
+
+            &:hover {
+              background: color.scale($dt-dark-cell-striped, $lightness: 8%) !important;
+            }
+          }
+
+          &.odd,
+          &:nth-child(odd) {
+            background: $dt-dark-cell-bg !important;
+
+            &:hover {
+              background: color.scale($dt-dark-cell-bg, $lightness: 20%) !important;
+            }
+          }
+
+          // Apply to ALL table cells
+          td {
+            border-color: $dt-dark-border !important;
+            color: $dt-dark-text !important;
+            background: inherit !important; // Inherit from parent row
+          }
+
+          &:last-child {
+            td {
+              border-bottom-color: $dt-dark-border !important;
+            }
+          }
+        }
+
+        // Empty row
+        .empty-row {
+          background: $dt-dark-bg !important;
+
+          td {
+            background: $dt-dark-bg !important;
+            border: none !important;
+          }
+
+          .empty-state {
+            .empty-icon {
+              color: $dt-dark-text;
+            }
+
+            p {
+              color: $dt-dark-text;
+            }
+
+            .empty-subtext {
+              color: $dt-dark-placeholder;
+            }
+          }
+        }
       }
     }
-    
-    th,
-    td {
-      white-space: normal;
+  }
+
+  // Loading state
+  &.loading {
+    .loading-spinner {
+      border-color: $dt-dark-border;
+      border-top-color: $dt-primary-color-light;
     }
-    
-    td {
-      &::before {
-        content: attr(data-label);
-        display: block;
-        font-weight: $dt-font-weight-semibold;
-        color: var(--dt-text-color, #{$dt-text-color});
-        opacity: 0.7;
-        margin-bottom: 4px;
-        font-size: $dt-font-size-sm;
-      }
+
+    p {
+      color: $dt-dark-text;
     }
   }
 }
 
-// Reduced motion
+// ============================================================================
+// ACCESSIBILITY & REDUCED MOTION
+// ============================================================================
+
 @media (prefers-reduced-motion: reduce) {
-  .data-table {
-    .table-wrapper tbody tr,
-    th.sortable {
-      transition: none;
-    }
-    
-    &.loading .loading-spinner {
-      animation: none;
-    }
+  .data-table,
+  table tbody tr,
+  th.sortable {
+    transition: none;
+  }
+
+  .loading-spinner {
+    animation-duration: 2s;
   }
 }
 
-// Print styles
-@media print {
-  .data-table {
-    box-shadow: none;
+// High contrast mode for dark theme
+@media (prefers-contrast: high) {
+  .data-table.dark-theme {
+    border: 1px solid #fff;
     
     .table-controls,
     .table-footer {
+      border-color: #fff;
+    }
+
+    table {
+      thead {
+        border-bottom-color: #fff;
+
+        tr th {
+          border-right-color: #fff;
+          color: #fff;
+          background: #000;
+        }
+      }
+
+      tbody {
+        tr {
+          td {
+            border-color: #fff;
+            color: #fff;
+            background: #000;
+          }
+          
+          &:nth-child(even) {
+            background: #111 !important;
+            
+            td {
+              background: #111;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// ============================================================================
+// PRINT STYLES
+// ============================================================================
+
+@media print {
+  .data-table {
+    box-shadow: none;
+    border: 1px solid #000;
+
+    .table-controls,
+    .table-footer {
       display: none;
+    }
+
+    .table-wrapper {
+      overflow: visible;
+    }
+
+    table {
+      page-break-inside: avoid;
+
+      thead {
+        display: table-header-group;
+      }
+
+      tbody tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
     }
   }
 }

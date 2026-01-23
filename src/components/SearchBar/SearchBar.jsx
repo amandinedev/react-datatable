@@ -5,7 +5,7 @@ const SearchBar = ({
   value = '',
   onSearch,
   placeholder = 'Search...',
-  label = 'Search:',
+  label = 'Search',
   showLabel = true,
   className = ''
 }) => {
