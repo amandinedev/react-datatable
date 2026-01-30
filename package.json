@@ -1,8 +1,24 @@
 {
-  "name": "react-datatable",
+  "name": "react-paginated-datatable",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "version": "0.1.0",
+  "description": "A customizable and accessible React DataTable component with search, sort, and pagination",
+  "main": "dist/index.js",
+  "module": "./src/index.esm.js",
+  "exports": {
+    ".": {
+      "require": "./src/index.js",
+      "import": "./src/index.esm.js"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/amandinedev/react-datatable.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amandinedev/react-datatable/issues"
+  },
+  "homepage": "https://github.com/amandinedev/react-datatable#readme",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -34,5 +50,13 @@
     "sass": "^1.97.2",
     "vite": "^7.2.4",
     "vitest": "^4.0.17"
-  }
+  },
+  "keywords": [
+    "react",
+    "datatable",
+    "table",
+    "data grid"
+  ],
+  "author": "",
+  "license": "ISC"
 }

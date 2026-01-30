@@ -28,7 +28,7 @@
 }
 
 // ============================================================================
-// PAGINATION BUTTONS (Navigation)
+// PAGINATION BUTTONS (Navigation) - LIGHT MODE
 // ============================================================================
 
 .pagination-button {
@@ -61,14 +61,19 @@
   position: relative;
   
   &:hover:not(:disabled) {
-    @include dt-focus-outline;
+    background: rgba($dt-primary-color, 0.08);
+    border-color: $dt-primary-color;
+    color: $dt-primary-color;
+    transform: translateY(-1px);
   }
   
   &:focus {
     @include dt-focus-outline;
+    border-color: $dt-primary-color;
   }
   
   &:active:not(:disabled) {
+    background: rgba($dt-primary-color, 0.15);
     transform: translateY(0);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
@@ -79,12 +84,6 @@
     opacity: 0.6;
     background: color.scale($dt-bg-color, $lightness: 5%);
     border-color: color.scale($dt-border-color, $lightness:10%);
-  }
-  
-  // Navigation buttons specific styles
-  &--first,
-  &--last {
-    font-weight: $dt-font-weight-bold;
   }
 }
 
@@ -103,7 +102,7 @@
 }
 
 // ============================================================================
-// INDIVIDUAL PAGE NUMBER
+// INDIVIDUAL PAGE NUMBER - LIGHT MODE
 // ============================================================================
 
 .page-number {
@@ -131,26 +130,40 @@
   position: relative;
   
   &:hover:not(.active) {
-    background: $dt-hover-color;
+    background: rgba($dt-primary-color, 0.08);
     border-color: $dt-primary-color;
+    color: $dt-primary-color;
     transform: translateY(-1px);
   }
   
   &:focus {
     @include dt-focus-outline;
+    border-color: $dt-primary-color;
   }
   
   &:active:not(.active) {
+    background: rgba($dt-primary-color, 0.15);
     transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
   
   &.active {
     font-weight: $dt-font-weight-bold;
     cursor: default;
     position: relative;
+    background: $dt-primary-color;
+    color: white;
+    border-color: $dt-primary-color;
+    box-shadow: 0 2px 4px rgba($dt-primary-color, 0.3);
+    
+    // Removed the underline as requested
+    &::after {
+      display: none;
+    }
     
     &:focus {
       @include dt-focus-outline;
+      border-color: darken($dt-primary-color, 10%);
     }
   }
 }
@@ -207,8 +220,16 @@
       color: $dt-dark-text;
       
       &:hover:not(:disabled) {
-        background: $dt-dark-hover;
+        background: rgba($dt-primary-color, 0.12);
         border-color: $dt-primary-color;
+        color: $dt-primary-color;
+        transform: translateY(-1px);
+      }
+      
+      &:active:not(:disabled) {
+        background: rgba($dt-primary-color, 0.2);
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
       
       &:disabled {
@@ -224,17 +245,27 @@
       color: $dt-dark-text;
       
       &:hover:not(.active) {
-        background: $dt-dark-hover;
+        background: rgba($dt-primary-color, 0.12);
         border-color: $dt-primary-color;
+        color: $dt-primary-color;
+        transform: translateY(-1px);
+      }
+      
+      &:active:not(.active) {
+        background: rgba($dt-primary-color, 0.2);
+        transform: translateY(0);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
       
       &.active {
-        background: $dt-pagination-active-bg;
-        color: $dt-pagination-active-color;
+        background: $dt-primary-color;
+        color: white;
         border-color: $dt-primary-color;
+        box-shadow: 0 2px 8px rgba($dt-primary-color, 0.4);
         
+        // Removed the underline as requested
         &::after {
-          background: $dt-pagination-active-color;
+          display: none;
         }
       }
     }
@@ -246,90 +277,8 @@
 }
 
 // ============================================================================
-// COMPACT THEME
-// ============================================================================
-
-.data-table.compact {
-  .pagination {
-    padding: 8px 0;
-    gap: $dt-pagination-gap-sm;
-    
-    .pagination-button {
-      padding: 4px 12px;
-      font-size: $dt-font-size-sm;
-      min-height: $dt-pagination-button-height-sm;
-      
-      // Hide text, show icons on very small screens
-      @media (max-width: 480px) {
-        span:not(.sr-only) {
-          display: none;
-        }
-        
-        &::before,
-        &::after {
-          content: '';
-          display: block;
-          width: 0.5em;
-          height: 0.5em;
-          border-style: solid;
-          border-width: 2px 2px 0 0;
-        }
-        
-        &--previous::before {
-          transform: rotate(225deg);
-        }
-        
-        &--next::after {
-          transform: rotate(45deg);
-        }
-        
-        &--first::before {
-          content: '⟪';
-          border: none;
-          font-size: 1.2em;
-        }
-        
-        &--last::after {
-          content: '⟫';
-          border: none;
-          font-size: 1.2em;
-        }
-      }
-    }
-    
-    .page-number {
-      min-width: $dt-pagination-button-width-sm;
-      height: $dt-pagination-button-height-sm;
-      font-size: $dt-font-size-sm;
-    }
-    
-    .page-ellipsis-item {
-      min-width: $dt-pagination-button-width-sm;
-      height: $dt-pagination-button-height-sm;
-    }
-    
-    .page-ellipsis {
-      min-width: $dt-pagination-button-width-sm;
-      height: $dt-pagination-button-height-sm;
-      font-size: $dt-font-size-sm;
-    }
-  }
-}
-
-// ============================================================================
 // ACCESSIBILITY & REDUCED MOTION
 // ============================================================================
-
-// High contrast mode
-@media (prefers-contrast: high) {
-  .page-number {
-    border-width: 3px;
-    
-    &.active {
-      border-width: 4px;
-    }
-  }
-}
 
 // Reduced motion preference
 @media (prefers-reduced-motion: reduce) {

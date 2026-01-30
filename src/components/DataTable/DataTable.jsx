@@ -36,6 +36,7 @@ const DataTable = ({
   onPageChange,
   onSearch,
 }) => {
+  
   // State
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);

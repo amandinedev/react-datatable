@@ -1,8 +1,8 @@
-@use '../../sass/abstracts' as *;
+@use "../../sass/abstracts" as *;
 @use "sass:color";
 
 // ============================================================================
-// PAGE SIZE SELECTOR COMPONENT
+// CUSTOM PAGE SIZE SELECTOR COMPONENT
 // ============================================================================
 
 .page-size-selector {
@@ -10,7 +10,7 @@
   align-items: center;
   gap: $dt-page-selector-gap;
   font-family: $dt-font-family;
-  font-size: $dt-font-size;
+  font-size: $dt-font-size-lg;
   line-height: $dt-line-height;
   transition: all $dt-transition-speed $dt-transition-timing;
 
@@ -29,30 +29,33 @@
   color: $dt-text-color;
   font-weight: $dt-font-weight-normal;
   white-space: nowrap;
-  font-size: inherit;
   user-select: none;
-  
+
   @include dt-media(mobile) {
     flex-shrink: 0;
   }
 }
 
 // ============================================================================
-// SELECT WRAPPER & DROPDOWN
+// CUSTOM DROPDOWN WRAPPER
 // ============================================================================
 
 .page-size-selector__wrapper {
   position: relative;
   display: inline-block;
   min-width: $dt-page-selector-min-width;
-  
+
   @include dt-media(mobile) {
     flex: 1;
     min-width: auto;
   }
 }
 
-.page-size-selector__select {
+// ============================================================================
+// DROPDOWN TRIGGER (replaces native select)
+// ============================================================================
+
+.page-size-selector__trigger {
   width: 100%;
   padding: 8px 32px 8px 12px;
   border: $dt-input-border-width solid $dt-border-color;
@@ -62,32 +65,44 @@
   font-family: $dt-font-family;
   cursor: pointer;
   transition: all $dt-transition-speed $dt-transition-timing;
-  appearance: none;
-  font-size: inherit;
-  line-height: inherit;
-  
-  // Focus state
+  font-size: $dt-font-size;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  position: relative;
+
+  // Hover state - Green tint background with green border
+  &:hover:not(.page-size-selector__trigger--disabled) {
+    background: rgba($dt-primary-color, 0.08);
+    border-color: $dt-primary-color;
+    color: $dt-primary-color;
+  }
+
+  // Focus state - Green outline
   &:focus {
     @include dt-focus-outline;
     border-color: $dt-primary-color;
+    color: $dt-primary-color;
   }
-  
-  // Hover state
-  &:hover:not(:disabled) {
-    border-color: color.scale($dt-border-color, $lightness: -20%);
-    background: color.scale($dt-bg-color, $lightness: -2%);
+
+  // Active state - Darker green background (when clicking)
+  &:active:not(.page-size-selector__trigger--disabled) {
+    background: rgba($dt-primary-color, 0.15);
+    transform: translateY(1px);
   }
-  
+
   // Disabled state
-  &:disabled {
+  &--disabled {
     opacity: 0.6;
     cursor: not-allowed;
-    background-color: color.scale($dt-bg-color, $lightness: 5%);
+    background-color: color.scale($dt-bg-color, $lightness: -5%);
   }
-  
-  // Active state
-  &:active:not(:disabled) {
-    transform: translateY(1px);
+
+  // Open state
+  &--open {
+    border-color: $dt-primary-color;
+    background: rgba($dt-primary-color, 0.05);
   }
 }
 
@@ -103,16 +118,126 @@
   pointer-events: none;
   color: $dt-text-color;
   opacity: 0.6;
-  font-size: 0.75em;
+  font-size: $dt-font-size-sm;
   transition: transform $dt-transition-speed $dt-transition-timing;
-  
-  .page-size-selector__select:focus + &,
-  .page-size-selector__select:hover + & {
-    opacity: 0.8;
+
+  // Arrow color changes on hover/focus
+  .page-size-selector__trigger:hover &,
+  .page-size-selector__trigger:focus & {
+    color: $dt-primary-color;
+    opacity: 1;
   }
-  
-  .page-size-selector__select:active + & {
+
+  // Open state - rotate arrow 180°
+  .page-size-selector__trigger--open & {
     transform: translateY(-50%) rotate(180deg);
+    color: $dt-primary-color;
+    opacity: 1;
+  }
+}
+
+// ============================================================================
+// DROPDOWN OPTIONS MENU
+// ============================================================================
+
+.page-size-selector__options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: $dt-bg-color;
+  border: 1px solid $dt-border-color;
+  border-radius: $dt-border-radius-sm;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+  animation: dropdownFadeIn $dt-transition-speed $dt-transition-timing;
+
+  @include dt-custom-scrollbar(6px);
+
+  // Position the dropdown above if there's not enough space below
+  &--above {
+    top: auto;
+    bottom: calc(100% + 4px);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ============================================================================
+// INDIVIDUAL OPTION ITEMS
+// ============================================================================
+
+.page-size-selector__option {
+  padding: 10px 12px;
+  background: $dt-bg-color;
+  color: $dt-text-color;
+  cursor: pointer;
+  transition: all $dt-transition-speed $dt-transition-timing;
+  font-size: $dt-font-size;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+
+  // Hover state - Light green background
+  &:hover:not(.page-size-selector__option--disabled) {
+    background: rgba($dt-primary-color, 0.08);
+    color: $dt-primary-color;
+  }
+
+  // Focus state
+  &:focus {
+    @include dt-focus-outline;
+    outline-offset: -2px;
+    background: rgba($dt-primary-color, 0.08);
+  }
+
+  // Active state (when clicking)
+  &:active:not(.page-size-selector__option--disabled) {
+    background: rgba($dt-primary-color, 0.15);
+  }
+
+  // Selected option
+  &--selected {
+    background: $dt-primary-color;
+    color: white;
+    font-weight: $dt-font-weight-semibold;
+
+    &:hover {
+      background: color.scale($dt-primary-color, $lightness: 5%);
+      color: white;
+    }
+  }
+
+  // Disabled option
+  &--disabled {
+    color: $dt-disabled-color;
+    background: $dt-hover-color;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  // First and last option border radius
+  &:first-child {
+    border-top-left-radius: $dt-border-radius-sm;
+    border-top-right-radius: $dt-border-radius-sm;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: $dt-border-radius-sm;
+    border-bottom-right-radius: $dt-border-radius-sm;
   }
 }
 
@@ -123,32 +248,42 @@
 // Small variant
 .size-small {
   font-size: $dt-font-size-sm;
-  
-  .page-size-selector__select {
+
+  .page-size-selector__trigger {
     padding: 6px 28px 6px 10px;
     min-width: $dt-page-selector-min-width-sm;
     border-radius: $dt-border-radius-sm;
   }
-  
+
   .page-size-selector__arrow {
     right: 10px;
     font-size: 0.7em;
+  }
+
+  .page-size-selector__option {
+    padding: 8px 10px;
+    font-size: $dt-font-size-sm;
   }
 }
 
 // Large variant
 .size-large {
   font-size: $dt-font-size-lg;
-  
-  .page-size-selector__select {
+
+  .page-size-selector__trigger {
     padding: 10px 36px 10px 14px;
     min-width: $dt-page-selector-min-width-lg;
     border-radius: $dt-border-radius;
   }
-  
+
   .page-size-selector__arrow {
     right: 14px;
     font-size: 0.8em;
+  }
+
+  .page-size-selector__option {
+    padding: 12px 14px;
+    font-size: $dt-font-size-lg;
   }
 }
 
@@ -161,33 +296,95 @@
     .page-size-selector__label {
       color: $dt-dark-text;
     }
-    
-    .page-size-selector__select {
+
+    .page-size-selector__trigger {
       background: color.scale($dt-dark-bg, $lightness: 5%);
       border-color: $dt-dark-border;
       color: $dt-dark-text;
-      
+
+      // Hover state - Green tint background with green border
+      &:hover:not(.page-size-selector__trigger--disabled) {
+        background: rgba($dt-primary-color, 0.12);
+        border-color: $dt-primary-color;
+      }
+
+      // Focus state - Green outline
       &:focus {
-        border-color: $dt-primary-color-light;
+        border-color: $dt-primary-color;
         @include dt-focus-outline;
       }
-      
-      &:hover:not(:disabled) {
-        background: color.scale($dt-dark-bg, $lightness: 8%);
-        border-color: color.scale($dt-dark-border, $lightness: 20%);
+
+      // Active state - Darker green background (when clicking)
+      &:active:not(.page-size-selector__trigger--disabled) {
+        background: rgba($dt-primary-color, 0.2);
       }
-      
-      &:disabled {
+
+      // Open state
+      &--open {
+        border-color: $dt-primary-color;
+        background: rgba($dt-primary-color, 0.1);
+      }
+
+      // Disabled state
+      &--disabled {
         background-color: color.scale($dt-dark-bg, $lightness: 2%);
       }
     }
-    
+
     .page-size-selector__arrow {
       color: $dt-dark-text;
-      
-      .page-size-selector__select:focus + &,
-      .page-size-selector__select:hover + & {
-        opacity: 0.9;
+
+      .page-size-selector__trigger:hover &,
+      .page-size-selector__trigger:focus & {
+        color: $dt-primary-color;
+      }
+    }
+
+    .page-size-selector__options {
+      background: color.scale($dt-dark-bg, $lightness: 5%);
+      border-color: $dt-dark-border;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+      &--above {
+        box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .page-size-selector__option {
+      background: color.scale($dt-dark-bg, $lightness: 5%);
+      color: $dt-dark-text;
+
+      // Hover state - Light green background
+      &:hover:not(.page-size-selector__option--disabled) {
+        background: rgba($dt-primary-color, 0.12);
+        color: $dt-primary-color;
+      }
+
+      // Focus state
+      &:focus {
+        background: rgba($dt-primary-color, 0.12);
+      }
+
+      // Active state (when clicking)
+      &:active:not(.page-size-selector__option--disabled) {
+        background: rgba($dt-primary-color, 0.2);
+      }
+
+      // Selected option
+      &--selected {
+        background: $dt-primary-color;
+        color: white;
+
+        &:hover {
+          background: color.scale($dt-primary-color, $lightness: -5%);
+          color: white;
+        }
+      }
+
+      // Disabled option
+      &--disabled {
+        color: $dt-dark-disabled;
+        background: $dt-dark-hover;
       }
     }
   }
@@ -199,31 +396,26 @@
 
 @media (prefers-reduced-motion: reduce) {
   .page-size-selector,
-  .page-size-selector__select,
-  .page-size-selector__arrow {
+  .page-size-selector__trigger,
+  .page-size-selector__arrow,
+  .page-size-selector__option {
     transition: none;
   }
-  
-  .page-size-selector__select:active:not(:disabled) {
+
+  .page-size-selector__trigger:active:not(
+      .page-size-selector__trigger--disabled
+    ) {
     transform: none;
   }
-  
+
   .page-size-selector__arrow {
-    .page-size-selector__select:active + & {
+    .page-size-selector__trigger--open & {
       transform: translateY(-50%);
     }
   }
-}
 
-// High contrast mode
-@media (prefers-contrast: high) {
-  .page-size-selector__select {
-    border-width: 2px;
-    
-    &:focus {
-      outline-width: 3px;
-      outline-offset: 1px;
-    }
+  .page-size-selector__options {
+    animation: none;
   }
 }
 

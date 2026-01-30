@@ -171,23 +171,29 @@ describe("DataTable Component", () => {
     expect(hasPage2).toBe(true);
   });
 
-  it("changes items per page when dropdown changes", async () => {
-    const User = userEvent.setup();
-    render(<DataTable {...defaultProps} itemsPerPage={2} />);
+it("changes items per page when dropdown changes", async () => {
+  const User = userEvent.setup();
+  render(<DataTable {...defaultProps} itemsPerPage={2} />);
 
-    const pageSizeSelect = screen.getByRole("combobox");
-    await User.selectOptions(pageSizeSelect, "25");
+  // Open the PageSizeSelector dropdown (it's now a custom component)
+  const pageSizeTrigger = screen.getByTestId('page-size-trigger');
+  await User.click(pageSizeTrigger);
+  
+  // Select a different option (e.g., 25)
+  const option25 = screen.getByTestId('page-size-option-25');
+  await User.click(option25);
 
-    // Wait for the page size change to take effect
-    await waitFor(() => {
-      // Should now show all items
-      expect(screen.getByText("John")).toBeInTheDocument();
-      expect(screen.getByText("Jane")).toBeInTheDocument();
-      expect(screen.getByText("Bob")).toBeInTheDocument();
-      expect(screen.getByText("Alice")).toBeInTheDocument();
-      expect(screen.getByText("Charlie")).toBeInTheDocument();
-    });
+  // Wait for the page size change to take effect
+  await waitFor(() => {
+    // Should now show all items (since we have 5 items total)
+    // The itemsPerPage prop changes, so all 5 should be visible
+    expect(screen.getByText("John")).toBeInTheDocument();
+    expect(screen.getByText("Jane")).toBeInTheDocument();
+    expect(screen.getByText("Bob")).toBeInTheDocument();
+    expect(screen.getByText("Alice")).toBeInTheDocument();
+    expect(screen.getByText("Charlie")).toBeInTheDocument();
   });
+});
 
   it("applies custom cell render function", () => {
     const customColumns = [

@@ -16,6 +16,7 @@
   box-shadow: $dt-box-shadow;
   overflow: hidden;
   transition: all $dt-transition-speed $dt-transition-timing;
+  width: 100%;
 
   // Loading state
   &.loading {
@@ -497,48 +498,6 @@ table {
 
   .loading-spinner {
     animation-duration: 2s;
-  }
-}
-
-// High contrast mode for dark theme
-@media (prefers-contrast: high) {
-  .data-table.dark-theme {
-    border: 1px solid #fff;
-    
-    .table-controls,
-    .table-footer {
-      border-color: #fff;
-    }
-
-    table {
-      thead {
-        border-bottom-color: #fff;
-
-        tr th {
-          border-right-color: #fff;
-          color: #fff;
-          background: #000;
-        }
-      }
-
-      tbody {
-        tr {
-          td {
-            border-color: #fff;
-            color: #fff;
-            background: #000;
-          }
-          
-          &:nth-child(even) {
-            background: #111 !important;
-            
-            td {
-              background: #111;
-            }
-          }
-        }
-      }
-    }
   }
 }
 
