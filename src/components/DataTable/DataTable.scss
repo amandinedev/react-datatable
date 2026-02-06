@@ -1,6 +1,5 @@
-@use '../../sass/abstracts' as *;
+@use "../../sass/abstracts" as *;
 @use "sass:color";
-
 
 // ============================================================================
 // DATA TABLE BASE STYLES
@@ -18,7 +17,6 @@
   transition: all $dt-transition-speed $dt-transition-timing;
   width: 100%;
 
-  // Loading state
   &.loading {
     min-height: $dt-table-loading-height;
     @include dt-flex-center;
@@ -96,7 +94,6 @@ table {
   border-spacing: 0;
   background: $dt-bg-color;
 
-  // Table header
   thead {
     background: $dt-header-bg;
     border-bottom: 2px solid $dt-border-color;
@@ -109,7 +106,7 @@ table {
         position: relative;
         user-select: none;
         border-right: 1px solid $dt-border-color;
-        background: $dt-header-bg; // Explicit header cell background
+        background: $dt-header-bg;
 
         &:last-child {
           border-right: none;
@@ -117,7 +114,8 @@ table {
 
         &.sortable {
           cursor: pointer;
-          transition: background-color $dt-transition-speed $dt-transition-timing;
+          transition: background-color $dt-transition-speed
+            $dt-transition-timing;
 
           &:hover,
           &:focus {
@@ -164,7 +162,7 @@ table {
             opacity: 0.5;
             transition: all $dt-transition-speed $dt-transition-timing;
             display: block;
-            
+
             &.active {
               color: $dt-primary-color;
               opacity: 1;
@@ -189,11 +187,9 @@ table {
             .sort-arrow-up,
             .sort-arrow-down {
               opacity: 0.3;
-                   
-              
+
               &:hover {
                 opacity: 0.8;
-                     
               }
             }
           }
@@ -208,14 +204,13 @@ table {
     }
   }
 
-  // Table body
   tbody {
     background: $dt-bg-color;
 
     tr {
       height: $dt-table-row-height;
       transition: background-color $dt-transition-speed $dt-transition-timing;
-      background: $dt-bg-color; // Explicit row background
+      background: $dt-bg-color;
 
       &:hover {
         background: color.scale($dt-hover-color, $lightness: -20%) !important;
@@ -229,13 +224,15 @@ table {
         }
       }
 
-      // Striped rows
       .data-table.striped & {
         &:nth-child(even) {
           background: color.scale($dt-hover-color, $lightness: 5%);
 
           &:hover {
-            background: color.scale($dt-hover-color, $lightness: -15%) !important;
+            background: color.scale(
+              $dt-hover-color,
+              $lightness: -15%
+            ) !important;
           }
         }
 
@@ -243,7 +240,10 @@ table {
           background: $dt-bg-color;
 
           &:hover {
-            background: color.scale($dt-hover-color, $lightness: -20%) !important;
+            background: color.scale(
+              $dt-hover-color,
+              $lightness: -20%
+            ) !important;
           }
         }
       }
@@ -252,7 +252,7 @@ table {
         padding: $dt-padding;
         border-bottom: 1px solid $dt-border-color;
         border-right: 1px solid $dt-border-color;
-        background: inherit; // Inherit background from parent tr
+        background: inherit;
 
         &:last-child {
           border-right: none;
@@ -266,7 +266,6 @@ table {
       }
     }
 
-    // Empty state
     .empty-row {
       height: $dt-table-loading-height;
       background: $dt-bg-color;
@@ -355,15 +354,13 @@ table {
   .table-controls,
   .table-footer {
     border-color: $dt-dark-border;
-    background: $dt-dark-header;
+    background: $dt-dark-cell-bg;
   }
 
-  // Explicitly target the table and all its cells
   .table-wrapper {
     table {
       background: $dt-dark-bg;
-      
-      // Table header in dark theme
+
       thead {
         background: $dt-dark-header;
         border-bottom-color: $dt-dark-border;
@@ -371,14 +368,17 @@ table {
         tr {
           th {
             border-right-color: $dt-dark-border;
-            color: #FFFFFF;
+            color: #ffffff;
             font-weight: $dt-font-weight-semibold;
-            background: $dt-dark-header !important; // Force dark header
+            background: $dt-dark-header !important;
 
             &.sortable {
               &:hover,
               &:focus {
-                background: color.scale($dt-dark-header, $lightness: 10%) !important;
+                background: color.scale(
+                  $dt-dark-header,
+                  $lightness: 10%
+                ) !important;
               }
 
               .sort-arrow-up,
@@ -394,31 +394,38 @@ table {
         }
       }
 
-      // Table body in dark theme
       tbody {
         background: $dt-dark-bg !important;
 
         tr {
           height: $dt-table-row-height;
-          background: $dt-dark-cell-bg !important; // DARK GREY CELLS - FORCE IT
+          background: $dt-dark-cell-bg !important;
 
           &:hover {
-            background: color.scale($dt-dark-cell-bg, $lightness: 8%) !important;
+            background: color.scale(
+              $dt-dark-cell-bg,
+              $lightness: 8%
+            ) !important;
           }
 
           &.clickable {
             &:hover {
-              background: color.scale($dt-dark-cell-bg, $lightness: 12%) !important;
+              background: color.scale(
+                $dt-dark-cell-bg,
+                $lightness: 12%
+              ) !important;
             }
           }
 
-          // Striped rows for dark theme
           &.even,
           &:nth-child(even) {
             background: $dt-dark-cell-striped !important;
 
             &:hover {
-              background: color.scale($dt-dark-cell-striped, $lightness: 8%) !important;
+              background: color.scale(
+                $dt-dark-cell-striped,
+                $lightness: 8%
+              ) !important;
             }
           }
 
@@ -427,15 +434,17 @@ table {
             background: $dt-dark-cell-bg !important;
 
             &:hover {
-              background: color.scale($dt-dark-cell-bg, $lightness: 20%) !important;
+              background: color.scale(
+                $dt-dark-cell-bg,
+                $lightness: 20%
+              ) !important;
             }
           }
 
-          // Apply to ALL table cells
           td {
             border-color: $dt-dark-border !important;
             color: $dt-dark-text !important;
-            background: inherit !important; // Inherit from parent row
+            background: inherit !important;
           }
 
           &:last-child {
@@ -445,7 +454,6 @@ table {
           }
         }
 
-        // Empty row
         .empty-row {
           background: $dt-dark-bg !important;
 
@@ -472,7 +480,6 @@ table {
     }
   }
 
-  // Loading state
   &.loading {
     .loading-spinner {
       border-color: $dt-dark-border;

@@ -1,4 +1,4 @@
-@use '../../sass/abstracts' as *;
+@use "../../sass/abstracts" as *;
 @use "sass:color";
 
 // ============================================================================
@@ -12,8 +12,7 @@
   gap: $dt-pagination-gap;
   padding: 16px 0;
   flex-wrap: wrap;
-  
-  // Screen reader only utility
+
   .sr-only {
     position: absolute;
     width: 1px;
@@ -43,7 +42,7 @@
   display: inline-block;
   line-height: inherit;
   margin: 0;
-  
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -59,31 +58,31 @@
   min-width: max-content;
   line-height: $dt-line-height;
   position: relative;
-  
+
   &:hover:not(:disabled) {
     background: rgba($dt-primary-color, 0.08);
     border-color: $dt-primary-color;
     color: $dt-primary-color;
     transform: translateY(-1px);
   }
-  
+
   &:focus {
     @include dt-focus-outline;
     border-color: $dt-primary-color;
   }
-  
+
   &:active:not(:disabled) {
     background: rgba($dt-primary-color, 0.15);
     transform: translateY(0);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
-  
+
   &:disabled {
     color: $dt-disabled-color;
     cursor: not-allowed;
     opacity: 0.6;
     background: color.scale($dt-bg-color, $lightness: 5%);
-    border-color: color.scale($dt-border-color, $lightness:10%);
+    border-color: color.scale($dt-border-color, $lightness: 10%);
   }
 }
 
@@ -112,7 +111,7 @@
   cursor: pointer;
   font: inherit;
   color: inherit;
-  
+
   min-width: $dt-pagination-button-width;
   height: $dt-pagination-button-height;
   padding: 0 8px;
@@ -128,25 +127,25 @@
   justify-content: center;
   line-height: $dt-line-height;
   position: relative;
-  
+
   &:hover:not(.active) {
     background: rgba($dt-primary-color, 0.08);
     border-color: $dt-primary-color;
     color: $dt-primary-color;
     transform: translateY(-1px);
   }
-  
+
   &:focus {
     @include dt-focus-outline;
     border-color: $dt-primary-color;
   }
-  
+
   &:active:not(.active) {
     background: rgba($dt-primary-color, 0.15);
     transform: translateY(0);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   }
-  
+
   &.active {
     font-weight: $dt-font-weight-bold;
     cursor: default;
@@ -155,15 +154,14 @@
     color: white;
     border-color: $dt-primary-color;
     box-shadow: 0 2px 4px rgba($dt-primary-color, 0.3);
-    
-    // Removed the underline as requested
+
     &::after {
       display: none;
     }
-    
+
     &:focus {
       @include dt-focus-outline;
-      border-color: darken($dt-primary-color, 10%);
+      border-color: color.scale($dt-primary-color, $lightness: -10%);
     }
   }
 }
@@ -218,58 +216,57 @@
       background: color.scale($dt-dark-bg, $lightness: 5%);
       border-color: $dt-dark-border;
       color: $dt-dark-text;
-      
+
       &:hover:not(:disabled) {
         background: rgba($dt-primary-color, 0.12);
         border-color: $dt-primary-color;
         color: $dt-primary-color;
         transform: translateY(-1px);
       }
-      
+
       &:active:not(:disabled) {
         background: rgba($dt-primary-color, 0.2);
         transform: translateY(0);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
-      
+
       &:disabled {
         background: color.scale($dt-dark-bg, $lightness: -5%);
         color: color.scale($dt-dark-text, $lightness: 30%);
         border-color: $dt-dark-border;
       }
     }
-    
+
     .page-number {
       background: color.scale($dt-dark-bg, $lightness: 5%);
       border-color: $dt-dark-border;
       color: $dt-dark-text;
-      
+
       &:hover:not(.active) {
         background: rgba($dt-primary-color, 0.12);
         border-color: $dt-primary-color;
         color: $dt-primary-color;
         transform: translateY(-1px);
       }
-      
+
       &:active:not(.active) {
         background: rgba($dt-primary-color, 0.2);
         transform: translateY(0);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
       }
-      
+
       &.active {
         background: $dt-primary-color;
         color: white;
         border-color: $dt-primary-color;
         box-shadow: 0 2px 8px rgba($dt-primary-color, 0.4);
-        
-        // Removed the underline as requested
+
         &::after {
           display: none;
         }
       }
     }
-    
+
     .page-ellipsis {
       color: color.scale($dt-dark-text, $lightness: 30%);
     }
@@ -280,7 +277,6 @@
 // ACCESSIBILITY & REDUCED MOTION
 // ============================================================================
 
-// Reduced motion preference
 @media (prefers-reduced-motion: reduce) {
   .pagination {
     .pagination-button,
@@ -308,18 +304,18 @@
       padding: 6px 8px;
       font-size: $dt-font-size-sm;
     }
-    
+
     .page-number {
       min-width: 32px;
       height: 32px;
       font-size: $dt-font-size-sm;
     }
-    
+
     .page-ellipsis-item {
       min-width: 32px;
       height: 32px;
     }
-    
+
     .page-ellipsis {
       min-width: 32px;
       height: 32px;

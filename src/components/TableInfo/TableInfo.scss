@@ -1,4 +1,4 @@
-@use '../../sass/abstracts' as *;
+@use "../../sass/abstracts" as *;
 @use "sass:color";
 
 // ============================================================================
@@ -15,8 +15,7 @@
   justify-content: flex-start;
   min-height: $dt-pagination-button-height;
   transition: color $dt-transition-speed $dt-transition-timing;
-  
-  // Accessibility - screen reader only class
+
   .sr-only {
     @include dt-sr-only;
   }
@@ -28,7 +27,7 @@
 
 .data-table.dark-theme {
   .table-info {
-    color: color.scale($dt-dark-text, $lightness:30%);
+    color: color.scale($dt-dark-text, $lightness: 30%);
   }
 }
 
@@ -36,7 +35,6 @@
 // ACCESSIBILITY & REDUCED MOTION
 // ============================================================================
 
-// Reduced motion preference
 @media (prefers-reduced-motion: reduce) {
   .table-info {
     transition: none;

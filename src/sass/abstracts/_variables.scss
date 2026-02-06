@@ -2,33 +2,39 @@
 // DATA TABLE STYLING VARIABLES
 // ============================================================================
 
-// ==================== CORE COLORS ====================
-$dt-primary-color: #4CAF50 !default;
+$dt-primary-color: #4caf50 !default;
 $dt-primary-color-light: #5cd633 !default;
 
 // ==================== LIGHT THEME COLORS ====================
-$dt-bg-color: #FFFFFF !default;
+$dt-bg-color: #ffffff !default;
 $dt-text-color: #212121 !default;
 $dt-border-color: #e9ecef !default;
-$dt-hover-color: #F5F5F5 !default;
-$dt-header-bg: #FAFAFA !default;
-$dt-disabled-color: #757575 !default;  // Disabled elements
+$dt-hover-color: #f5f5f5 !default;
+$dt-header-bg: #fafafa !default;
+$dt-disabled-color: #757575 !default;
 $dt-placeholder-color: #757575 !default;
 
 // ==================== DARK THEME COLORS ====================
-$dt-dark-bg: #121212 !default;                
-$dt-dark-text: #E0E0E0 !default;             
-$dt-dark-border: #333333 !default;            
-$dt-dark-hover: #1E1E1E !default;             
-$dt-dark-header: #1A1A1A !default;            
-$dt-dark-cell-bg: #1A1A1A !default;           
-$dt-dark-cell-striped: #222222 !default;     
-$dt-dark-disabled: #666666 !default;          // Disabled elements
-$dt-dark-placeholder: #888888 !default;       
+$dt-dark-bg: hsl(0, 0%, 7%) !default;
+$dt-dark-text: #e0e0e0 !default;
+$dt-dark-border: #333333 !default;
+$dt-dark-hover: #1e1e1e !default;
+$dt-dark-header: hsl(0, 0%, 13%) !default;
+$dt-dark-cell-bg: #1a1a1a !default;
+$dt-dark-cell-striped: #222222 !default;
+$dt-dark-disabled: #666666 !default;
+$dt-dark-placeholder: #888888 !default;
 
 // ==================== TYPOGRAPHY ====================
-$dt-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 
-                 'Helvetica Neue', Arial, sans-serif !default;
+$dt-font-family:
+  system-ui,
+  -apple-system,
+  BlinkMacSystemFont,
+  "Segoe UI",
+  "Roboto",
+  "Helvetica Neue",
+  Arial,
+  sans-serif !default;
 $dt-font-size: 16px !default;
 $dt-font-size-sm: 14px !default;
 $dt-font-size-lg: 18px !default;
@@ -86,8 +92,8 @@ $dt-pagination-button-height-lg: 56px !default;
 $dt-pagination-gap: 12px !default;
 $dt-pagination-gap-sm: 8px !default;
 $dt-pagination-gap-lg: 16px !default;
-$dt-pagination-active-bg: #4CAF50 !default;
-$dt-pagination-active-color: #FFFFFF !default;
+$dt-pagination-active-bg: #4caf50 !default;
+$dt-pagination-active-color: #ffffff !default;
 
 // ==================== PAGE SIZE SELECTOR ====================
 $dt-page-selector-min-width: 100px !default;
@@ -100,7 +106,7 @@ $dt-page-selector-gap-lg: 16px !default;
 // ==================== LOADING SPINNER ====================
 $dt-spinner-size: 48px !default;
 $dt-spinner-border-width: 4px !default;
-$dt-spinner-border-color: #E0E0E0 !default;
+$dt-spinner-border-color: #e0e0e0 !default;
 $dt-spinner-border-active-color: $dt-primary-color !default;
 
 // ==================== INPUTS & CONTROLS ====================

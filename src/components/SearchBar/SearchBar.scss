@@ -1,4 +1,4 @@
-@use '../../sass/abstracts' as *;
+@use "../../sass/abstracts" as *;
 @use "sass:color";
 
 // ============================================================================
@@ -44,54 +44,72 @@
 
 .search-input {
   width: 100%;
-  padding: 10px 40px 10px 12px;
+  padding: 12px 40px 12px 12px;
   border: 2px solid $dt-border-color;
   border-radius: $dt-border-radius-sm;
   background: $dt-bg-color;
   color: $dt-text-color;
   font-size: $dt-font-size;
   transition: all $dt-transition-speed $dt-transition-timing;
-  
-  // Hover state - Green border
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px $dt-bg-color inset !important;
+    -webkit-text-fill-color: $dt-text-color !important;
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: $dt-text-color;
+    border-color: $dt-border-color;
+  }
+
+  &:-moz-autofill,
+  &:-moz-autofill:hover,
+  &:-moz-autofill:focus {
+    background: $dt-bg-color !important;
+    color: $dt-text-color !important;
+    border-color: $dt-border-color;
+  }
+
+  &[data-autocompleted] {
+    background-color: $dt-bg-color !important;
+    color: $dt-text-color !important;
+  }
+
   &:hover:not(:focus):not(:disabled) {
     border-color: $dt-primary-color;
     background: rgba($dt-primary-color, 0.03);
   }
-  
-  // Focus state - Green outline
+
   &:focus {
     @include dt-focus-outline;
     border-color: $dt-primary-color;
     background: rgba($dt-primary-color, 0.05);
   }
-  
-  // Active state (when typing)
+
   &:active:not(:disabled) {
     background: rgba($dt-primary-color, 0.08);
   }
-  
-  // Disabled state
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     background: color.scale($dt-bg-color, $lightness: 5%);
   }
-  
-  // Placeholder
+
   &::placeholder {
     color: $dt-placeholder-color;
     @include dt-truncate;
   }
-  
-  // Improve placeholder truncation for different browsers
+
   &::-webkit-input-placeholder {
     @include dt-truncate;
   }
-  
+
   &::-moz-placeholder {
     @include dt-truncate;
   }
-  
+
   &:-ms-input-placeholder {
     @include dt-truncate;
   }
@@ -108,7 +126,7 @@
   font-size: 16px;
   pointer-events: none;
   transition: color $dt-transition-speed $dt-transition-timing;
-  
+
   .search-input:hover + &,
   .search-input:focus + & {
     color: $dt-primary-color;
@@ -121,53 +139,34 @@
 
 .search-clear {
   position: absolute;
-  right: 8px;
+  right: 0px;
   @include dt-button-reset;
-  color: $dt-placeholder-color;
-  font-size: 16px;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: all $dt-transition-speed $dt-transition-timing;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  cursor: pointer;
-  
-  // Hover state - Green background
+
   &:hover:not(:disabled) {
     color: $dt-primary-color;
-    background: rgba($dt-primary-color, 0.08);
+    background: rgba($dt-primary-color, 0.05);
   }
-  
-  // Focus state
+
   &:focus {
-    @include dt-focus-outline;
-    background: rgba($dt-primary-color, 0.08);
+    color: $dt-primary-color;
+    background: rgba($dt-primary-color, 0.05);
   }
-  
-  // Active state (when clicking)
+
+  &:focus-visible {
+    outline-color: $dt-primary-color;
+    color: $dt-primary-color;
+    background: rgba($dt-primary-color, 0.05);
+  }
+
   &:active:not(:disabled) {
     color: $dt-primary-color;
-    background: rgba($dt-primary-color, 0.15);
-    transform: scale(0.95);
+    background: rgba($dt-primary-color, 0.08);
   }
-  
-  // Disabled state
+
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-  }
-}
-
-// ============================================================================
-// WITH ICON VARIANT (when search icon is visible)
-// ============================================================================
-
-.search-input-wrapper--with-icon {
-  .search-input {
-    padding-left: 40px;
   }
 }
 
@@ -179,63 +178,57 @@
   .search-label {
     color: color.scale($dt-dark-text, $lightness: 30%);
   }
-  
+
   .search-input {
     background: color.scale($dt-dark-bg, $lightness: 5%);
     border-color: $dt-dark-border;
     color: $dt-dark-text;
-    
-    // Hover state - Green border
+
     &:hover:not(:focus):not(:disabled) {
       border-color: $dt-primary-color;
       background: rgba($dt-primary-color, 0.08);
     }
-    
-    // Focus state
+
     &:focus {
       border-color: $dt-primary-color;
       background: rgba($dt-primary-color, 0.1);
       box-shadow: 0 0 0 3px rgba($dt-primary-color, 0.2);
     }
-    
-    // Active state
+
     &:active:not(:disabled) {
       background: rgba($dt-primary-color, 0.12);
     }
-    
+
     &:disabled {
       background: color.scale($dt-dark-bg, $lightness: 2%);
     }
-    
+
     &::placeholder {
       color: color.scale($dt-dark-text, $lightness: 30%);
     }
   }
-  
+
   .search-icon {
     color: color.scale($dt-dark-text, $lightness: 30%);
-    
+
     .search-input:hover + &,
     .search-input:focus + & {
       color: $dt-primary-color;
     }
   }
-  
+
   .search-clear {
     color: color.scale($dt-dark-text, $lightness: 30%);
-    
-    // Hover state - Green background
+
     &:hover:not(:disabled) {
       color: $dt-primary-color;
       background: rgba($dt-primary-color, 0.12);
     }
-    
-    // Focus state
+
     &:focus {
       background: rgba($dt-primary-color, 0.12);
     }
-    
-    // Active state
+
     &:active:not(:disabled) {
       color: $dt-primary-color;
       background: rgba($dt-primary-color, 0.2);
@@ -247,14 +240,13 @@
 // ACCESSIBILITY & REDUCED MOTION
 // ============================================================================
 
-// Reduced motion preference
 @media (prefers-reduced-motion: reduce) {
   .search-input,
   .search-icon,
   .search-clear {
     transition: none;
   }
-  
+
   .search-clear:active {
     transform: none;
   }
@@ -267,46 +259,30 @@
 @include dt-media(sm) {
   .search-bar {
     gap: 8px;
-    
+
     .search-label {
       font-size: $dt-font-size-lg;
     }
   }
-  
+
   .search-input {
-    padding: 8px 36px 8px 10px;
+    padding: 10px 36px 10px 10px;
     font-size: $dt-font-size-sm;
   }
-  
+
   .search-icon {
     left: 10px;
     font-size: 14px;
   }
-  
-  .search-clear {
-    right: 6px;
-    width: 22px;
-    height: 22px;
-    font-size: 14px;
-  }
 }
 
-// Hide label on very small screens
 @media (max-width: 480px) {
   .search-bar.hide-label-on-mobile .search-label {
     display: none;
   }
-  
+
   .search-input {
-    padding: 6px 32px 6px 8px;
-  }
-  
-  .search-icon {
-    left: 8px;
-  }
-  
-  .search-clear {
-    right: 4px;
+    padding: 10px 32px 10px 10px;
   }
 }
 
