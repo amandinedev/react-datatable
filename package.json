@@ -1,6 +1,6 @@
 {
   "name": "react-paginated-datatable",
-  "private": true,
+  "private": false,
   "version": "0.1.0",
   "description": "A customizable and accessible React DataTable component with search, sort, and pagination",
   "main": "dist/index.js",
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/amandinedev/react-datatable.git"
+    "url": "git+https://github.com/amandinedev/react-datatable.git"
   },
   "bugs": {
     "url": "https://github.com/amandinedev/react-datatable/issues"
@@ -30,6 +30,7 @@
     "@reduxjs/toolkit": "^2.11.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-paginated-datatable": "file:react-paginated-datatable-0.1.0.tgz",
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
