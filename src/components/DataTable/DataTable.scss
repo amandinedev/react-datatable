@@ -224,6 +224,11 @@ table {
         }
       }
 
+      &:focus {
+        outline: 2px solid $dt-primary-color; 
+        box-shadow: inset 0 0 0 2px $dt-primary-color; 
+      }
+
       .data-table.striped & {
         &:nth-child(even) {
           background: color.scale($dt-hover-color, $lightness: 5%);
@@ -409,7 +414,7 @@ table {
           }
 
           &.clickable {
-            &:hover {
+            &:hover, &:focus {
               background: color.scale(
                 $dt-dark-cell-bg,
                 $lightness: 12%
@@ -417,11 +422,16 @@ table {
             }
           }
 
+          &:focus {
+            outline: 2px solid $dt-primary-color-light; 
+            box-shadow: inset 0 0 0 2px $dt-primary-color-light;
+          }
+
           &.even,
           &:nth-child(even) {
             background: $dt-dark-cell-striped !important;
 
-            &:hover {
+            &:hover, &:focus{
               background: color.scale(
                 $dt-dark-cell-striped,
                 $lightness: 8%

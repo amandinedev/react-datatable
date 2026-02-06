@@ -29,6 +29,12 @@ const DataTable = ({
   emptyMessage = "No data available",
   loading = false,
   loadingMessage = "Loading data...",
+  tableId = "data-table",
+  ariaLabel = "Data table",
+  ariaLabelledBy,
+  tableCaption,
+  rowKey = "id",
+  showRowNumbers = false,
 
   // Callbacks
   onRowClick,
@@ -104,6 +110,9 @@ const DataTable = ({
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startItem = totalItems > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+  // Get the start index for paginated rows
+  const startRowIndex = (currentPage - 1) * itemsPerPage;
 
   // Handlers
   const handleSort = useCallback(
@@ -218,7 +227,15 @@ const DataTable = ({
   const hasData = paginatedData.length > 0;
 
    return (
-    <div className={tableClasses} data-testid="data-table" data-theme={theme} data-striped={striped} data-sortable={sortable} data-pagination={pagination} data-has-data={hasData}>
+    <div 
+      className={tableClasses} 
+      data-testid="data-table" 
+      data-theme={theme} 
+      data-striped={striped} 
+      data-sortable={sortable} 
+      data-pagination={pagination} 
+      data-has-data={hasData}
+    >
       {/* Header Controls */}
       <div className="table-controls">
         <div className="pagination-controls">
@@ -233,12 +250,37 @@ const DataTable = ({
 
       {/* Table */}
       <div className="table-wrapper">
-        <table data-testid="data-table-content">
-          <thead>
-            <tr>
+        <table
+          id={tableId}
+          role="table"
+          aria-label={ariaLabel}
+          aria-labelledby={ariaLabelledBy}
+          aria-rowcount={totalItems + 1} // +1 for header row
+          data-testid="data-table-content"
+        >
+          {tableCaption && (
+            <caption className="table-caption">{tableCaption}</caption>
+          )}
+          
+          <thead role="rowgroup">
+            <tr role="row" aria-rowindex="1">
+              {showRowNumbers && (
+                <th
+                  role="columnheader"
+                  scope="col"
+                  className="row-number-header"
+                  style={{ width: "60px", textAlign: "center" }}
+                  aria-label="Row number"
+                >
+                  #
+                </th>
+              )}
+              
               {columns.map((column, index) => (
                 <th
                   key={`${column.dataKey}-${index}`}
+                  role="columnheader"
+                  scope="col"
                   className={`${
                     column.sortable !== false && sortable ? "sortable" : ""
                   } ${sortConfig.key === column.dataKey ? "sorted" : ""} ${
@@ -260,7 +302,6 @@ const DataTable = ({
                     handleKeyDown(e, column.dataKey)
                   }
                   tabIndex={column.sortable !== false && sortable ? 0 : -1}
-                  role="columnheader"
                   aria-sort={
                     sortConfig.key === column.dataKey
                       ? sortConfig.direction === "asc"
@@ -268,6 +309,10 @@ const DataTable = ({
                         : "descending"
                       : "none"
                   }
+                  aria-label={`${column.title}${sortConfig.key === column.dataKey ? 
+                    `, sorted ${sortConfig.direction === 'asc' ? 'ascending' : 'descending'}` : 
+                    ''}`}
+                  aria-colindex={index + 1 + (showRowNumbers ? 1 : 0)}
                 >
                   <div className="header-content">
                     <span>{column.title}</span>
@@ -303,48 +348,93 @@ const DataTable = ({
             </tr>
           </thead>
 
-          <tbody>
+          <tbody role="rowgroup">
             {hasData ? (
-              paginatedData.map((row, rowIndex) => (
-                <tr
-                  key={row.id || rowIndex}
-                  className={`${
-                    onRowClick ? "clickable" : ""
-                  } ${striped && rowIndex % 2 === 1 ? "even" : "odd"} ${
-                    row.rowClassName || ""
-                  }`}
-                  onClick={(e) => onRowClick && handleRowClick(row, e)}
-                  style={row.rowStyle}
-                >
-                  {columns.map((column, colIndex) => (
-                    <td
-                      key={`${column.dataKey}-${rowIndex}-${colIndex}`}
-                      className={`${
-                        typeof column.cellClassName === "function"
-                          ? column.cellClassName(row)
-                          : column.cellClassName || ""
-                      }`}
-                      style={{
-                        textAlign: column.align || "left",
-                        ...(typeof column.cellStyle === "function"
-                          ? column.cellStyle(row)
-                          : column.cellStyle),
-                      }}
-                    >
-                      {column.render
-                        ? column.render(
-                            row[column.dataKey],
-                            row,
-                            rowIndex
-                          )
-                        : row[column.dataKey] ?? ""}
-                    </td>
-                  ))}
-                </tr>
-              ))
+              paginatedData.map((row, rowIndex) => {
+                const absoluteRowIndex = startRowIndex + rowIndex + 2; // +2 because header is row 1
+                const rowId = row[rowKey] || `row-${rowIndex}`;
+                
+                return (
+                  <tr
+                    key={rowId}
+                    id={rowId}
+                    role="row"
+                    aria-rowindex={absoluteRowIndex}
+                    className={`${
+                      onRowClick ? "clickable" : ""
+                    } ${striped && rowIndex % 2 === 1 ? "even" : "odd"} ${
+                      row.rowClassName || ""
+                    }`}
+                    onClick={(e) => onRowClick && handleRowClick(row, e)}
+                    onKeyDown={(e) => {
+                      if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
+                        e.preventDefault();
+                        handleRowClick(row, e);
+                      }
+                    }}
+                    tabIndex={onRowClick ? 0 : -1}
+                    style={row.rowStyle}
+                    aria-selected={row.selected || false}
+                    aria-label={`Row ${absoluteRowIndex - 1}`}
+                  >
+                    {showRowNumbers && (
+                      <td
+                        role="cell"
+                        aria-colindex="1"
+                        className="row-number-cell"
+                        style={{ textAlign: "center" }}
+                      >
+                        {startRowIndex + rowIndex + 1}
+                      </td>
+                    )}
+                    
+                    {columns.map((column, colIndex) => {
+                      const cellIndex = colIndex + 1 + (showRowNumbers ? 1 : 0);
+                      const cellValue = row[column.dataKey] ?? "";
+                      
+                      return (
+                        <td
+                          key={`${column.dataKey}-${rowIndex}-${colIndex}`}
+                          role="cell"
+                          aria-colindex={cellIndex}
+                          aria-label={`${column.title}: ${cellValue}`}
+                          className={`${
+                            typeof column.cellClassName === "function"
+                              ? column.cellClassName(row)
+                              : column.cellClassName || ""
+                          }`}
+                          style={{
+                            textAlign: column.align || "left",
+                            ...(typeof column.cellStyle === "function"
+                              ? column.cellStyle(row)
+                              : column.cellStyle),
+                          }}
+                        >
+                          {column.render
+                            ? column.render(
+                                cellValue,
+                                row,
+                                rowIndex
+                              )
+                            : cellValue}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })
             ) : (
-              <tr className={`empty-row ${searchTerm ? 'has-search' : 'no-search'}`} data-empty="true" data-has-search={!!searchTerm}>
-                <td colSpan={columns.length} data-testid="data-table-empty">
+              <tr 
+                role="row" 
+                className={`empty-row ${searchTerm ? 'has-search' : 'no-search'}`} 
+                data-empty="true" 
+                data-has-search={!!searchTerm}
+              >
+                <td 
+                  role="cell" 
+                  colSpan={columns.length + (showRowNumbers ? 1 : 0)} 
+                  data-testid="data-table-empty"
+                >
                   <div className="empty-state">
                     <span className="empty-icon">📊</span>
                     <p>{emptyMessage}</p>
@@ -389,6 +479,10 @@ DataTable.defaultProps = {
   emptyMessage: "No data available",
   loading: false,
   loadingMessage: "Loading data...",
+  tableId: "data-table",
+  ariaLabel: "Data table",
+  rowKey: "id",
+  showRowNumbers: false,
 };
 
 export default DataTable;
