@@ -18,13 +18,13 @@ A customizable, accessible, React DataTable component with sorting, filtering, p
 
 ```bash
 # Using npm
-npm install react-datatable-plugin
+npm install react-paginated-datatable
 
 # Using yarn
-yarn add react-datatable-plugin
+yarn add react-paginated-datatable
 
 # Using pnpm
-pnpm add react-datatable-plugin
+pnpm add react-paginated-datatable
 ```
 
 ## ⚙️ Usage
