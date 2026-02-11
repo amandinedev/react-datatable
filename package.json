@@ -1,7 +1,7 @@
 {
   "name": "react-paginated-datatable",
   "private": false,
-  "version": "0.1.4",
+  "version": "0.1.3",
   "description": "A customizable and accessible React DataTable component with search, sort, and pagination",
   "main": "dist/index.js",
   "module": "./src/index.esm.js",
