@@ -252,7 +252,7 @@ const EmployeeListPage = () => {
           pagination={true}
           striped={true}
           compact={false}
-          theme="dark"
+          theme="light"
           // Customization
           className="employee-data-table"
           searchPlaceholder="employees by name..."
