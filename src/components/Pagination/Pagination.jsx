@@ -1,4 +1,6 @@
 import React, { useMemo } from 'react';
+import PropTypes from 'prop-types';
+import PageButton from '../PageButton/PageButton';
 import './Pagination.scss';
 
 const Pagination = ({
@@ -9,18 +11,15 @@ const Pagination = ({
   showNavigation = true,
   maxVisiblePages = 5
 }) => {
-  // Calculate page numbers with proper boundaries
+  // ===== DERIVED VALUES =====
   const pageNumbers = useMemo(() => {
     if (totalPages <= 1) return [];
     if (!showPageNumbers) return [];
     
     const pages = [];
-    
-    // Calculate the range of pages to show
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
     
-    // Adjust start page if we're near the end
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
@@ -32,25 +31,23 @@ const Pagination = ({
     return pages;
   }, [currentPage, totalPages, showPageNumbers, maxVisiblePages]);
 
-  // Don't render if no pages
   if (totalPages <= 1) return null;
 
+  // ===== EVENT HANDLERS =====
   const handlePrevious = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1);
-    }
+    if (currentPage > 1) onPageChange(currentPage - 1);
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1);
-    }
+    if (currentPage < totalPages) onPageChange(currentPage + 1);
   };
 
-  // Determine if we should show ellipsis
+  // ===== DERIVED VALUES =====
   const showStartEllipsis = pageNumbers.length > 0 && pageNumbers[0] > 2;
-  const showEndEllipsis = pageNumbers.length > 0 && pageNumbers[pageNumbers.length - 1] < totalPages - 1;
+  const showEndEllipsis = pageNumbers.length > 0 && 
+    pageNumbers[pageNumbers.length - 1] < totalPages - 1;
 
+  // ===== RENDER =====
   return (
     <nav className="pagination" aria-label="Pagination">
       {showNavigation && (
@@ -68,56 +65,40 @@ const Pagination = ({
         <div className="page-numbers" role="list">
           {/* First page */}
           {pageNumbers[0] > 1 && (
-            <button
-              className={`page-number ${currentPage === 1 ? 'active' : ''}`}
-              onClick={() => onPageChange(1)}
-              aria-label={`Go to page 1`}
-              aria-current={currentPage === 1 ? 'page' : undefined}
-              role="listitem"
-            >
-              1
-            </button>
+            <PageButton
+              page={1}
+              currentPage={currentPage}
+              onPageChange={onPageChange}
+            />
           )}
           
           {/* Start ellipsis */}
           {showStartEllipsis && (
-            <span className="page-ellipsis" aria-hidden="true">
-              ...
-            </span>
+            <span className="page-ellipsis" aria-hidden="true">...</span>
           )}
           
           {/* Page numbers */}
           {pageNumbers.map(page => (
-            <button
+            <PageButton
               key={page}
-              className={`page-number ${currentPage === page ? 'active' : ''}`}
-              onClick={() => onPageChange(page)}
-              aria-label={`Go to page ${page}`}
-              aria-current={currentPage === page ? 'page' : undefined}
-              role="listitem"
-            >
-              {page}
-            </button>
+              page={page}
+              currentPage={currentPage}
+              onPageChange={onPageChange}
+            />
           ))}
           
           {/* End ellipsis */}
           {showEndEllipsis && (
-            <span className="page-ellipsis" aria-hidden="true">
-              ...
-            </span>
+            <span className="page-ellipsis" aria-hidden="true">...</span>
           )}
           
           {/* Last page */}
           {pageNumbers[pageNumbers.length - 1] < totalPages && (
-            <button
-              className={`page-number ${currentPage === totalPages ? 'active' : ''}`}
-              onClick={() => onPageChange(totalPages)}
-              aria-label={`Go to page ${totalPages}`}
-              aria-current={currentPage === totalPages ? 'page' : undefined}
-              role="listitem"
-            >
-              {totalPages}
-            </button>
+            <PageButton
+              page={totalPages}
+              currentPage={currentPage}
+              onPageChange={onPageChange}
+            />
           )}
         </div>
       )}
@@ -136,10 +117,14 @@ const Pagination = ({
   );
 };
 
-Pagination.defaultProps = {
-  showPageNumbers: true,
-  showNavigation: true,
-  maxVisiblePages: 5
+// ===== PROP TYPES =====
+Pagination.propTypes = {
+  currentPage: PropTypes.number.isRequired,
+  totalPages: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  showPageNumbers: PropTypes.bool,
+  showNavigation: PropTypes.bool,
+  maxVisiblePages: PropTypes.number
 };
 
 export default Pagination;

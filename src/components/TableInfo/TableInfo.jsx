@@ -1,32 +1,23 @@
-import React from 'react';
-import './TableInfo.scss';
+import React from "react";
+import PropTypes from "prop-types";
+import "./TableInfo.scss";
 
-const TableInfo = ({
-  totalItems,
-  startItem,
-  endItem
-}) => {
-  if (totalItems === 0) {
-    return (
-      <div className="table-info">
-        No data available
-      </div>
-    );
-  }
-
-  const entryText = totalItems === 1 ? 'entry' : 'entries';
-
+const TableInfo = ({ totalItems = 0, startItem = 0, endItem = 0 }) => {
+  // ===== RENDER =====
   return (
     <div className="table-info" role="status" aria-live="polite">
-      Showing {startItem} to {endItem} of {totalItems} {entryText}
+      {totalItems === 0
+        ? "No data available"
+        : `Showing ${startItem} to ${endItem} of ${totalItems} ${totalItems === 1 ? "entry" : "entries"}`}
     </div>
   );
 };
 
-TableInfo.defaultProps = {
-  totalItems: 0,
-  startItem: 0,
-  endItem: 0
+// ===== PROP TYPES =====
+TableInfo.propTypes = {
+  totalItems: PropTypes.number,
+  startItem: PropTypes.number,
+  endItem: PropTypes.number
 };
 
 export default TableInfo;

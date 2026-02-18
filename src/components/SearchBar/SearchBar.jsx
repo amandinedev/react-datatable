@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import './SearchBar.scss';
 
 const SearchBar = ({
@@ -9,13 +10,16 @@ const SearchBar = ({
   showLabel = true,
   className = ''
 }) => {
+  // ===== STATE =====
   const [localValue, setLocalValue] = useState(value);
 
+  // ===== EFFECTS =====
   // Sync local state with external value
   useEffect(() => {
     setLocalValue(value);
   }, [value]);
 
+  // ===== EVENT HANDLERS =====
   const handleChange = (e) => {
     const newValue = e.target.value;
     setLocalValue(newValue);
@@ -27,15 +31,10 @@ const SearchBar = ({
     onSearch('');
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Escape') {
-      handleClear();
-    }
-  };
-
+  // ===== RENDER =====
   return (
     <div className={`search-bar ${className}`}>
-      {showLabel && label && (
+      {showLabel && (
         <label className="search-label" htmlFor="search-input">
           {label}
         </label>
@@ -48,8 +47,8 @@ const SearchBar = ({
           placeholder={placeholder}
           value={localValue}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
-          aria-label={label || "Search"}
+          onKeyDown={(e) => e.key === 'Escape' && handleClear()}
+          aria-label={label}
         />
         {localValue && (
           <button
@@ -66,12 +65,14 @@ const SearchBar = ({
   );
 };
 
-SearchBar.defaultProps = {
-  value: '',
-  placeholder: 'Search...',
-  label: 'Search:',
-  showLabel: true,
-  className: ''
+// ===== PROP TYPES =====
+SearchBar.propTypes = {
+  value: PropTypes.string,
+  onSearch: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  label: PropTypes.string,
+  showLabel: PropTypes.bool,
+  className: PropTypes.string
 };
 
 export default SearchBar;

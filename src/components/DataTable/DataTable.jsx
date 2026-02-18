@@ -1,10 +1,5 @@
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  useEffect,
-} from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import PropTypes from "prop-types";
 import SearchBar from "../SearchBar/SearchBar";
 import PageSizeSelector from "../PageSizeSelector/PageSizeSelector";
 import Pagination from "../Pagination/Pagination";
@@ -42,35 +37,29 @@ const DataTable = ({
   onPageChange,
   onSearch,
 }) => {
-  
-  // State
+  // ===== STATE =====
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(initialItemsPerPage);
-  const [sortConfig, setSortConfig] = useState({
-    key: null,
-    direction: "asc",
-  });
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  // Track previous values to detect changes
+  // ===== REFS =====
   const previousDataRef = useRef(data);
   const previousSearchTermRef = useRef(searchTerm);
 
+  // ===== DERIVED VALUES =====
   // Filter data based on search term
   const filteredData = useMemo(() => {
     if (!searchTerm.trim()) return data;
-
+    
     const lowerSearchTerm = searchTerm.toLowerCase();
-    return data.filter((row) => {
-      return columns.some((column) => {
-        const value = row[column.dataKey];
-        if (value == null) return false;
-
+    return data.filter(row => 
+      columns.some(column => {
         if (column.searchable === false) return false;
-
-        return String(value).toLowerCase().includes(lowerSearchTerm);
-      });
-    });
+        const value = row[column.dataKey];
+        return value != null && String(value).toLowerCase().includes(lowerSearchTerm);
+      })
+    );
   }, [data, searchTerm, columns]);
 
   // Sort data
@@ -86,147 +75,105 @@ const DataTable = ({
       if (aValue == null) return sortConfig.direction === "asc" ? 1 : -1;
       if (bValue == null) return sortConfig.direction === "asc" ? -1 : 1;
 
-      // Handle string comparison
       const aString = String(aValue).toLowerCase();
       const bString = String(bValue).toLowerCase();
-
-      if (aString < bString) return sortConfig.direction === "asc" ? -1 : 1;
-      if (aString > bString) return sortConfig.direction === "asc" ? 1 : -1;
-      return 0;
+      const comparison = aString.localeCompare(bString);
+      
+      return sortConfig.direction === "asc" ? comparison : -comparison;
     });
   }, [filteredData, sortConfig, sortable]);
 
-  // Paginate data
+  // Pagination calculations
+  const totalItems = sortedData.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  
+  // Paginate data - keeping endIndex for clarity
   const paginatedData = useMemo(() => {
     if (!pagination) return sortedData;
-
+    
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;  // Keeping endIndex for readability
     return sortedData.slice(startIndex, endIndex);
   }, [sortedData, currentPage, itemsPerPage, pagination]);
 
-  // Calculate totals
-  const totalItems = sortedData.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startItem = totalItems > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+  // Display calculations
+  const startItem = totalItems ? (currentPage - 1) * itemsPerPage + 1 : 0;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
-
-  // Get the start index for paginated rows
   const startRowIndex = (currentPage - 1) * itemsPerPage;
 
-  // Handlers
-  const handleSort = useCallback(
-    (key) => {
-      if (!sortable) return;
+  // ===== CLASS NAME GENERATION =====
+  const tableClasses = [
+    "data-table",
+    striped && "striped",
+    theme === "dark" && "dark-theme",
+  ].filter(Boolean).join(" ");
 
-      const newDirection =
-        sortConfig.key === key && sortConfig.direction === "asc"
-          ? "desc"
-          : "asc";
-      const newSortConfig = {
-        key,
-        direction: newDirection,
-      };
+  // ===== EVENT HANDLERS =====
+  const handleSort = useCallback((key) => {
+    if (!sortable) return;
 
-      setSortConfig(newSortConfig);
-      setCurrentPage(1);
+    const newDirection = sortConfig.key === key && sortConfig.direction === "asc" ? "desc" : "asc";
+    setSortConfig({ key, direction: newDirection });
+    setCurrentPage(1);
+    onSort?.(key, newDirection);
+  }, [sortable, sortConfig.key, sortConfig.direction, onSort]);
 
-      if (onSort) {
-        onSort(key, newDirection);
-      }
-    },
-    [sortable, onSort, sortConfig.key, sortConfig.direction],
-  );
-
-  const handleKeyDown = useCallback(
-    (event, key) => {
-      if (!sortable) return;
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        handleSort(key);
-      }
-    },
-    [sortable, handleSort],
-  );
+  const handleKeyDown = useCallback((event, key) => {
+    if (!sortable) return;
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleSort(key);
+    }
+  }, [sortable, handleSort]);
 
   const handlePageSizeChange = useCallback((size) => {
     setItemsPerPage(size);
     setCurrentPage(1);
   }, []);
 
-  const handleSearch = useCallback(
-    (term) => {
-      setSearchTerm(term);
-      setCurrentPage(1);
+  const handleSearch = useCallback((term) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+    onSearch?.(term);
+  }, [onSearch]);
 
-      if (onSearch) {
-        onSearch(term);
-      }
-    },
-    [onSearch],
-  );
+  const handlePageChange = useCallback((page) => {
+    setCurrentPage(page);
+    onPageChange?.(page);
+  }, [onPageChange]);
 
-  const handlePageChange = useCallback(
-    (page) => {
-      setCurrentPage(page);
+  const handleRowClick = useCallback((row, event) => {
+    onRowClick?.(row, event);
+  }, [onRowClick]);
 
-      if (onPageChange) {
-        onPageChange(page);
-      }
-    },
-    [onPageChange],
-  );
-
-  const handleRowClick = useCallback(
-    (row, event) => {
-      if (onRowClick) {
-        onRowClick(row, event);
-      }
-    },
-    [onRowClick],
-  );
-
-  // Use an effect to reset page when data changes, but only if it's a meaningful change
+  // ===== EFFECTS =====
+  // Reset page on data/search changes
   useEffect(() => {
     const dataChanged = previousDataRef.current !== data;
     const searchTermChanged = previousSearchTermRef.current !== searchTerm;
 
-    // Update refs for next comparison
     previousDataRef.current = data;
     previousSearchTermRef.current = searchTerm;
 
-    // Only reset page if there was a meaningful change
     if (dataChanged || searchTermChanged) {
-      // Use requestAnimationFrame to avoid synchronous state updates in effect
-      requestAnimationFrame(() => {
-        setCurrentPage(1);
-      });
+      requestAnimationFrame(() => setCurrentPage(1));
     }
   }, [data, searchTerm]);
 
-  // Determine CSS classes
-  const tableClasses = [
-    "data-table",
-    striped && "striped",
-    theme === "dark" && "dark-theme",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  // Render loading state
+  // ===== LOADING STATE =====
   if (loading) {
     return (
       <div className={`${tableClasses} loading`} data-testid="data-table-loading">
-        <div className="loading-spinner"></div>
+        <div className="loading-spinner" />
         <p>{loadingMessage}</p>
       </div>
     );
   }
 
-  // Check if there's data to display
   const hasData = paginatedData.length > 0;
 
-   return (
+  // ===== RENDER =====
+  return (
     <div 
       className={tableClasses} 
       data-testid="data-table" 
@@ -238,9 +185,11 @@ const DataTable = ({
     >
       {/* Header Controls */}
       <div className="table-controls">
-        <div className="pagination-controls">
-          <PageSizeSelector value={itemsPerPage} onChange={handlePageSizeChange} />
-        </div>
+        {pagination && (
+          <div className="pagination-controls">
+            <PageSizeSelector value={itemsPerPage} onChange={handlePageSizeChange} />
+          </div>
+        )}
         {searchable && (
           <div className="search-control">
             <SearchBar value={searchTerm} onSearch={handleSearch} placeholder={searchPlaceholder} />
@@ -255,12 +204,10 @@ const DataTable = ({
           role="table"
           aria-label={ariaLabel}
           aria-labelledby={ariaLabelledBy}
-          aria-rowcount={totalItems + 1} // +1 for header row
+          aria-rowcount={totalItems + 1}
           data-testid="data-table-content"
         >
-          {tableCaption && (
-            <caption className="table-caption">{tableCaption}</caption>
-          )}
+          {tableCaption && <caption className="table-caption">{tableCaption}</caption>}
           
           <thead role="rowgroup">
             <tr role="row" aria-rowindex="1">
@@ -276,82 +223,54 @@ const DataTable = ({
                 </th>
               )}
               
-              {columns.map((column, index) => (
-                <th
-                  key={`${column.dataKey}-${index}`}
-                  role="columnheader"
-                  scope="col"
-                  className={`${
-                    column.sortable !== false && sortable ? "sortable" : ""
-                  } ${sortConfig.key === column.dataKey ? "sorted" : ""} ${
-                    column.headerClassName || ""
-                  }`}
-                  style={{
-                    width: column.width || "auto",
-                    textAlign: column.align || "left",
-                    ...column.headerStyle,
-                  }}
-                  onClick={() =>
-                    column.sortable !== false &&
-                    sortable &&
-                    handleSort(column.dataKey)
-                  }
-                  onKeyDown={(e) =>
-                    column.sortable !== false &&
-                    sortable &&
-                    handleKeyDown(e, column.dataKey)
-                  }
-                  tabIndex={column.sortable !== false && sortable ? 0 : -1}
-                  aria-sort={
-                    sortConfig.key === column.dataKey
-                      ? sortConfig.direction === "asc"
-                        ? "ascending"
-                        : "descending"
-                      : "none"
-                  }
-                  aria-label={`${column.title}${sortConfig.key === column.dataKey ? 
-                    `, sorted ${sortConfig.direction === 'asc' ? 'ascending' : 'descending'}` : 
-                    ''}`}
-                  aria-colindex={index + 1 + (showRowNumbers ? 1 : 0)}
-                >
-                  <div className="header-content">
-                    <span>{column.title}</span>
-                    {column.sortable !== false && sortable && (
-                      <span className="sort-indicator">
-                        <span className="sort-arrow-wrapper">
-                          <span
-                            className={`sort-arrow-up ${
-                              sortConfig.key === column.dataKey &&
-                              sortConfig.direction === "asc"
-                                ? "active"
-                                : ""
-                            }`}
-                          >
-                            ▲
-                          </span>
-                          <span
-                            className={`sort-arrow-down ${
-                              sortConfig.key === column.dataKey &&
-                              sortConfig.direction === "desc"
-                                ? "active"
-                                : ""
-                            }`}
-                          >
-                            ▼
+              {columns.map((column, index) => {
+                const isSortable = column.sortable !== false && sortable;
+                const isSorted = sortConfig.key === column.dataKey;
+                const colIndex = index + 1 + (showRowNumbers ? 1 : 0);
+                
+                return (
+                  <th
+                    key={`${column.dataKey}-${index}`}
+                    role="columnheader"
+                    scope="col"
+                    className={`
+                      ${isSortable ? "sortable" : ""} 
+                      ${isSorted ? "sorted" : ""} 
+                      ${column.headerClassName || ""}
+                    `}
+                    style={{
+                      width: column.width || "auto",
+                      textAlign: column.align || "left",
+                      ...column.headerStyle,
+                    }}
+                    onClick={() => isSortable && handleSort(column.dataKey)}
+                    onKeyDown={(e) => isSortable && handleKeyDown(e, column.dataKey)}
+                    tabIndex={isSortable ? 0 : -1}
+                    aria-sort={isSorted ? (sortConfig.direction === "asc" ? "ascending" : "descending") : "none"}
+                    aria-label={`${column.title}${isSorted ? `, sorted ${sortConfig.direction}` : ""}`}
+                    aria-colindex={colIndex}
+                  >
+                    <div className="header-content">
+                      <span>{column.title}</span>
+                      {isSortable && (
+                        <span className="sort-indicator">
+                          <span className="sort-arrow-wrapper">
+                            <span className={`sort-arrow-up ${isSorted && sortConfig.direction === "asc" ? "active" : ""}`}>▲</span>
+                            <span className={`sort-arrow-down ${isSorted && sortConfig.direction === "desc" ? "active" : ""}`}>▼</span>
                           </span>
                         </span>
-                      </span>
-                    )}
-                  </div>
-                </th>
-              ))}
+                      )}
+                    </div>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
 
           <tbody role="rowgroup">
             {hasData ? (
               paginatedData.map((row, rowIndex) => {
-                const absoluteRowIndex = startRowIndex + rowIndex + 2; // +2 because header is row 1
+                const absoluteRowIndex = startRowIndex + rowIndex + 2;
                 const rowId = row[rowKey] || `row-${rowIndex}`;
                 
                 return (
@@ -360,11 +279,11 @@ const DataTable = ({
                     id={rowId}
                     role="row"
                     aria-rowindex={absoluteRowIndex}
-                    className={`${
-                      onRowClick ? "clickable" : ""
-                    } ${striped && rowIndex % 2 === 1 ? "even" : "odd"} ${
-                      row.rowClassName || ""
-                    }`}
+                    className={`
+                      ${onRowClick ? "clickable" : ""}
+                      ${striped && rowIndex % 2 === 1 ? "even" : "odd"}
+                      ${row.rowClassName || ""}
+                    `}
                     onClick={(e) => onRowClick && handleRowClick(row, e)}
                     onKeyDown={(e) => {
                       if (onRowClick && (e.key === 'Enter' || e.key === ' ')) {
@@ -398,25 +317,13 @@ const DataTable = ({
                           role="cell"
                           aria-colindex={cellIndex}
                           aria-label={`${column.title}: ${cellValue}`}
-                          className={`${
-                            typeof column.cellClassName === "function"
-                              ? column.cellClassName(row)
-                              : column.cellClassName || ""
-                          }`}
+                          className={typeof column.cellClassName === "function" ? column.cellClassName(row) : column.cellClassName || ""}
                           style={{
                             textAlign: column.align || "left",
-                            ...(typeof column.cellStyle === "function"
-                              ? column.cellStyle(row)
-                              : column.cellStyle),
+                            ...(typeof column.cellStyle === "function" ? column.cellStyle(row) : column.cellStyle),
                           }}
                         >
-                          {column.render
-                            ? column.render(
-                                cellValue,
-                                row,
-                                rowIndex
-                              )
-                            : cellValue}
+                          {column.render ? column.render(cellValue, row, rowIndex) : cellValue}
                         </td>
                       );
                     })}
@@ -424,25 +331,12 @@ const DataTable = ({
                 );
               })
             ) : (
-              <tr 
-                role="row" 
-                className={`empty-row ${searchTerm ? 'has-search' : 'no-search'}`} 
-                data-empty="true" 
-                data-has-search={!!searchTerm}
-              >
-                <td 
-                  role="cell" 
-                  colSpan={columns.length + (showRowNumbers ? 1 : 0)} 
-                  data-testid="data-table-empty"
-                >
+              <tr role="row" className={`empty-row ${searchTerm ? 'has-search' : 'no-search'}`}>
+                <td role="cell" colSpan={columns.length + (showRowNumbers ? 1 : 0)} data-testid="data-table-empty">
                   <div className="empty-state">
                     <span className="empty-icon">📊</span>
                     <p>{emptyMessage}</p>
-                    {searchTerm && (
-                      <p className="empty-subtext">
-                        Try clearing your search
-                      </p>
-                    )}
+                    {searchTerm && <p className="empty-subtext">Try clearing your search</p>}
                   </div>
                 </td>
               </tr>
@@ -464,25 +358,53 @@ const DataTable = ({
       </div>
     </div>
   );
-}
+};
 
-DataTable.defaultProps = {
-  data: [],
-  columns: [],
-  itemsPerPage: 10,
-  searchable: true,
-  sortable: true,
-  pagination: true,
-  striped: false,
-  theme: "light",
-  searchPlaceholder: "Search...",
-  emptyMessage: "No data available",
-  loading: false,
-  loadingMessage: "Loading data...",
-  tableId: "data-table",
-  ariaLabel: "Data table",
-  rowKey: "id",
-  showRowNumbers: false,
+// ===== PROP TYPES =====
+DataTable.propTypes = {
+  // Data
+  data: PropTypes.array,
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      dataKey: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      sortable: PropTypes.bool,
+      searchable: PropTypes.bool,
+      render: PropTypes.func,
+      width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      align: PropTypes.oneOf(['left', 'center', 'right']),
+      headerClassName: PropTypes.string,
+      headerStyle: PropTypes.object,
+      cellClassName: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
+      cellStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func])
+    })
+  ),
+
+  // Configuration
+  itemsPerPage: PropTypes.number,
+  searchable: PropTypes.bool,
+  sortable: PropTypes.bool,
+  pagination: PropTypes.bool,
+  striped: PropTypes.bool,
+  theme: PropTypes.oneOf(['light', 'dark']),
+
+  // Customization
+  searchPlaceholder: PropTypes.string,
+  emptyMessage: PropTypes.string,
+  loading: PropTypes.bool,
+  loadingMessage: PropTypes.string,
+  tableId: PropTypes.string,
+  ariaLabel: PropTypes.string,
+  ariaLabelledBy: PropTypes.string,
+  tableCaption: PropTypes.string,
+  rowKey: PropTypes.string,
+  showRowNumbers: PropTypes.bool,
+
+  // Callbacks
+  onRowClick: PropTypes.func,
+  onSort: PropTypes.func,
+  onPageChange: PropTypes.func,
+  onSearch: PropTypes.func
 };
 
 export default DataTable;
