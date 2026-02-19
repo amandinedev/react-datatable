@@ -38,16 +38,12 @@ describe('PageSizeSelector Component', () => {
   const user = userEvent.setup();
   renderComponent();
   
-  // Open the dropdown
   await user.click(screen.getByTestId('page-size-trigger'));
   
-  // Get all option buttons
   const optionButtons = screen.getAllByRole('option');
   
-  // Check we have 5 options
   expect(optionButtons).toHaveLength(5);
   
-  // Check the text content of each option
   const optionTexts = optionButtons.map(button => button.textContent);
   expect(optionTexts).toEqual(['5', '10', '25', '50', '100']);
 });
@@ -56,10 +52,8 @@ describe('PageSizeSelector Component', () => {
     const user = userEvent.setup();
     renderComponent();
     
-    // Open the dropdown
     await user.click(screen.getByTestId('page-size-trigger'));
-    
-    // Click on option 25
+
     await user.click(screen.getByTestId('page-size-option-25'));
     
     expect(mockOnChange).toHaveBeenCalledWith(25);
@@ -68,15 +62,12 @@ describe('PageSizeSelector Component', () => {
   it('closes dropdown after selecting an option', async () => {
     const user = userEvent.setup();
     renderComponent();
-    
-    // Open the dropdown
+
     await user.click(screen.getByTestId('page-size-trigger'));
     expect(screen.getByTestId('page-size-options')).toBeInTheDocument();
-    
-    // Click on option 25
+
     await user.click(screen.getByTestId('page-size-option-25'));
     
-    // Dropdown should be closed
     expect(screen.queryByTestId('page-size-options')).not.toBeInTheDocument();
   });
 
@@ -84,18 +75,14 @@ describe('PageSizeSelector Component', () => {
   const user = userEvent.setup();
   renderComponent({ options: [20, 40, 60] });
   
-  // Open the dropdown
   await user.click(screen.getByTestId('page-size-trigger'));
   
-  // Check each custom option exists with the correct text
   expect(screen.getByRole('option', { name: '20' })).toBeInTheDocument();
   expect(screen.getByRole('option', { name: '40' })).toBeInTheDocument();
   expect(screen.getByRole('option', { name: '60' })).toBeInTheDocument();
   
-  // Default option (10) should not be present
   expect(screen.queryByRole('option', { name: '10' })).not.toBeInTheDocument();
-  
-  // Verify we have exactly 3 options
+
   const allOptions = screen.getAllByRole('option');
   expect(allOptions).toHaveLength(3);
 });
@@ -109,7 +96,6 @@ describe('PageSizeSelector Component', () => {
     expect(trigger).toHaveAttribute('aria-expanded', 'false');
     expect(trigger).toHaveAttribute('aria-label', 'Show 10 entries per page');
     
-    // Open dropdown and check aria-expanded updates
     await user.click(trigger);
     expect(trigger).toHaveAttribute('aria-expanded', 'true');
   });
@@ -133,21 +119,17 @@ describe('PageSizeSelector Component', () => {
     const user = userEvent.setup();
     renderComponent();
     
-    // Tab to the trigger
     await user.tab();
     
     const trigger = screen.getByTestId('page-size-trigger');
     expect(trigger).toHaveFocus();
-    
-    // Open with Enter
+
     await user.keyboard('[Enter]');
     expect(screen.getByTestId('page-size-options')).toBeInTheDocument();
     
-    // Close with Escape
     await user.keyboard('[Escape]');
     expect(screen.queryByTestId('page-size-options')).not.toBeInTheDocument();
-    
-    // Open with Space
+
     await user.keyboard('[Space]');
     expect(screen.getByTestId('page-size-options')).toBeInTheDocument();
   });
@@ -158,14 +140,11 @@ describe('PageSizeSelector Component', () => {
     
     const trigger = screen.getByTestId('page-size-trigger');
     
-    // Should have disabled class
     expect(trigger).toHaveClass('page-size-selector__trigger--disabled');
-    
-    // Should not open on click
+
     await user.click(trigger);
     expect(screen.queryByTestId('page-size-options')).not.toBeInTheDocument();
-    
-    // Should not call onChange
+
     expect(mockOnChange).not.toHaveBeenCalled();
   });
 
@@ -178,12 +157,10 @@ describe('PageSizeSelector Component', () => {
     const trigger = selector.querySelector('.page-size-selector__trigger');
     const arrow = selector.querySelector('.page-size-selector__arrow');
     
-    // Should have 2 labels (Show and entries)
     expect(labels.length).toBe(2);
     expect(labels[0]).toHaveTextContent('Show');
     expect(labels[1]).toHaveTextContent('entries');
     
-    // Should have wrapper with trigger button and arrow
     expect(wrapper).toBeInTheDocument();
     expect(trigger).toBeInTheDocument();
     expect(arrow).toBeInTheDocument();
@@ -194,14 +171,11 @@ describe('PageSizeSelector Component', () => {
     const user = userEvent.setup();
     renderComponent();
     
-    // Open the dropdown
     await user.click(screen.getByTestId('page-size-trigger'));
     expect(screen.getByTestId('page-size-options')).toBeInTheDocument();
     
-    // Click outside
     await user.click(document.body);
     
-    // Dropdown should be closed
     expect(screen.queryByTestId('page-size-options')).not.toBeInTheDocument();
   });
 
@@ -209,14 +183,11 @@ describe('PageSizeSelector Component', () => {
     const user = userEvent.setup();
     renderComponent({ value: 25 });
     
-    // Open the dropdown
     await user.click(screen.getByTestId('page-size-trigger'));
     
-    // Option 25 should have selected class
     const selectedOption = screen.getByTestId('page-size-option-25');
     expect(selectedOption).toHaveClass('page-size-selector__option--selected');
     
-    // Other options should not have selected class
     const otherOption = screen.getByTestId('page-size-option-10');
     expect(otherOption).not.toHaveClass('page-size-selector__option--selected');
   });
@@ -225,13 +196,10 @@ describe('PageSizeSelector Component', () => {
     const user = userEvent.setup();
     renderComponent({ value: 10 });
     
-    // Open the dropdown
     await user.click(screen.getByTestId('page-size-trigger'));
     
-    // Click on already selected option (10)
     await user.click(screen.getByTestId('page-size-option-10'));
     
-    // Should not call onChange since value didn't change
     expect(mockOnChange).not.toHaveBeenCalled();
   });
 });

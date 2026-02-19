@@ -26,7 +26,6 @@ describe("TableInfo Component", () => {
   it("handles edge case where startItem > endItem", () => {
     render(<TableInfo totalItems={35} startItem={5} endItem={2} />);
 
-    // Should still render the provided values even if they don't make logical sense
     expect(
       screen.getByText("Showing 5 to 2 of 35 entries"),
     ).toBeInTheDocument();
@@ -43,7 +42,6 @@ describe("TableInfo Component", () => {
   it("handles string values for numbers", () => {
     render(<TableInfo totalItems="35" startItem="1" endItem="10" />);
 
-    // The component should handle string numbers correctly
     expect(
       screen.getByText("Showing 1 to 10 of 35 entries"),
     ).toBeInTheDocument();

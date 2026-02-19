@@ -26,7 +26,6 @@ describe('Pagination Component', () => {
       />
     );
     
-    // Should show page numbers around current page
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('2')).toBeInTheDocument();
     expect(screen.getByText('3')).toBeInTheDocument();
@@ -34,7 +33,6 @@ describe('Pagination Component', () => {
     expect(screen.getByText('5')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
     
-    // Should show ellipsis
     const ellipsisElements = screen.getAllByText('...');
     expect(ellipsisElements.length).toBe(1);
   });
@@ -149,7 +147,6 @@ describe('Pagination Component', () => {
       />
     );
     
-    // Should show 7 visible page numbers (plus first/last pages)
     const visiblePageNumbers = [1, 2, 3, 4, 5, 6, 7, 20];
     visiblePageNumbers.forEach(page => {
       expect(screen.getByText(page.toString())).toBeInTheDocument();
@@ -197,7 +194,6 @@ describe('Pagination Component', () => {
       />
     );
     
-    // Should show all 5 pages without ellipsis
     [1, 2, 3, 4, 5].forEach(page => {
       expect(screen.getByText(page.toString())).toBeInTheDocument();
     });
@@ -214,7 +210,6 @@ describe('Pagination Component', () => {
       />
     );
     
-    // Should render with all default props
     expect(screen.getByText('Previous')).toBeInTheDocument();
     expect(screen.getByText('Next')).toBeInTheDocument();
     expect(screen.getByText('1')).toBeInTheDocument();

@@ -18,6 +18,7 @@ const DataTable = ({
   pagination = true,
   striped = false,
   theme = "light",
+  searchMode = "and",
 
   // Customization
   searchPlaceholder = "Search...",
@@ -37,6 +38,7 @@ const DataTable = ({
   onPageChange,
   onSearch,
 }) => {
+
   // ===== STATE =====
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -48,19 +50,38 @@ const DataTable = ({
   const previousSearchTermRef = useRef(searchTerm);
 
   // ===== DERIVED VALUES =====
-  // Filter data based on search term
-  const filteredData = useMemo(() => {
-    if (!searchTerm.trim()) return data;
-    
-    const lowerSearchTerm = searchTerm.toLowerCase();
-    return data.filter(row => 
-      columns.some(column => {
-        if (column.searchable === false) return false;
+const filteredData = useMemo(() => {
+  
+  if (!searchTerm || !searchTerm.trim()) return data;
+  
+  const trimmedSearch = searchTerm.trim();
+  const keywords = trimmedSearch
+    .toLowerCase()
+    .split(/\s+/)
+    .filter(keyword => keyword.length > 0);
+  
+  if (keywords.length === 0) return data;
+  
+  const searchableColumns = columns.filter(column => column.searchable !== false);
+  
+  return data.filter(row => {
+    const rowSearchableText = searchableColumns
+      .map(column => {
         const value = row[column.dataKey];
-        return value != null && String(value).toLowerCase().includes(lowerSearchTerm);
+        if (value === null || value === undefined) return '';
+        if (typeof value === 'object') return JSON.stringify(value).toLowerCase();
+        return String(value).toLowerCase();
       })
-    );
-  }, [data, searchTerm, columns]);
+      .join(' ')
+      .toLowerCase();
+    
+    if (searchMode === 'and') {
+      return keywords.every(keyword => rowSearchableText.includes(keyword));
+    } else {
+      return keywords.some(keyword => rowSearchableText.includes(keyword));
+    }
+  });
+}, [data, searchTerm, columns, searchMode]);
 
   // Sort data
   const sortedData = useMemo(() => {
@@ -70,7 +91,6 @@ const DataTable = ({
       const aValue = a[sortConfig.key];
       const bValue = b[sortConfig.key];
 
-      // Handle null/undefined values
       if (aValue == null && bValue == null) return 0;
       if (aValue == null) return sortConfig.direction === "asc" ? 1 : -1;
       if (bValue == null) return sortConfig.direction === "asc" ? -1 : 1;
@@ -87,13 +107,12 @@ const DataTable = ({
   const totalItems = sortedData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   
-  // Paginate data - keeping endIndex for clarity
+  // Paginate data
   const paginatedData = useMemo(() => {
     if (!pagination) return sortedData;
     
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;  // Keeping endIndex for readability
-    return sortedData.slice(startIndex, endIndex);
+    return sortedData.slice(startIndex, startIndex + itemsPerPage);
   }, [sortedData, currentPage, itemsPerPage, pagination]);
 
   // Display calculations
@@ -147,7 +166,6 @@ const DataTable = ({
   }, [onRowClick]);
 
   // ===== EFFECTS =====
-  // Reset page on data/search changes
   useEffect(() => {
     const dataChanged = previousDataRef.current !== data;
     const searchTermChanged = previousSearchTermRef.current !== searchTerm;
@@ -336,7 +354,14 @@ const DataTable = ({
                   <div className="empty-state">
                     <span className="empty-icon">📊</span>
                     <p>{emptyMessage}</p>
-                    {searchTerm && <p className="empty-subtext">Try clearing your search</p>}
+                    {searchTerm && (
+                      <>
+                        <p className="empty-subtext">Try clearing your search</p>
+                        <p className="empty-subtext mode-hint">
+                          Searching in <strong>{searchMode === 'and' ? 'AND' : 'OR'}</strong> mode
+                        </p>
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -360,9 +385,8 @@ const DataTable = ({
   );
 };
 
-// ===== PROP TYPES =====
+//===== PROP TYPES =====
 DataTable.propTypes = {
-  // Data
   data: PropTypes.array,
   columns: PropTypes.arrayOf(
     PropTypes.shape({
@@ -379,16 +403,13 @@ DataTable.propTypes = {
       cellStyle: PropTypes.oneOfType([PropTypes.object, PropTypes.func])
     })
   ),
-
-  // Configuration
   itemsPerPage: PropTypes.number,
   searchable: PropTypes.bool,
   sortable: PropTypes.bool,
   pagination: PropTypes.bool,
   striped: PropTypes.bool,
   theme: PropTypes.oneOf(['light', 'dark']),
-
-  // Customization
+  searchMode: PropTypes.oneOf(['and', 'or']),
   searchPlaceholder: PropTypes.string,
   emptyMessage: PropTypes.string,
   loading: PropTypes.bool,
@@ -399,8 +420,6 @@ DataTable.propTypes = {
   tableCaption: PropTypes.string,
   rowKey: PropTypes.string,
   showRowNumbers: PropTypes.bool,
-
-  // Callbacks
   onRowClick: PropTypes.func,
   onSort: PropTypes.func,
   onPageChange: PropTypes.func,

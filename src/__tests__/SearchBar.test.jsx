@@ -23,8 +23,6 @@ describe('SearchBar Component', () => {
     expect(screen.getByPlaceholderText('Search employees...')).toBeInTheDocument();
   });
 
-  // UPDATED: Removed debounce test since it's no longer in the component
-  // NEW: Tests immediate search on input change
   it('calls onSearch immediately on input change', async () => {
     const user = userEvent.setup();
     
@@ -33,8 +31,7 @@ describe('SearchBar Component', () => {
     const input = screen.getByPlaceholderText('Search...');
     await user.type(input, 'test');
     
-    // Should be called multiple times (once for each keystroke)
-    expect(mockOnSearch).toHaveBeenCalledTimes(4); // t, e, s, t
+    expect(mockOnSearch).toHaveBeenCalledTimes(4); 
     expect(mockOnSearch).toHaveBeenCalledWith('t');
     expect(mockOnSearch).toHaveBeenCalledWith('te');
     expect(mockOnSearch).toHaveBeenCalledWith('tes');
@@ -65,7 +62,6 @@ describe('SearchBar Component', () => {
     expect(mockOnSearch).toHaveBeenCalledTimes(1);
   });
 
-  // NEW: Tests Escape key functionality
   it('clears search when Escape key is pressed', async () => {
     const user = userEvent.setup();
     render(<SearchBar onSearch={mockOnSearch} value="test" />);
@@ -76,7 +72,6 @@ describe('SearchBar Component', () => {
     expect(mockOnSearch).toHaveBeenCalledWith('');
   });
 
-  // NEW: Tests that the component syncs with external value changes
   it('updates input value when value prop changes', () => {
     const { rerender } = render(<SearchBar onSearch={mockOnSearch} value="initial" />);
     
@@ -87,7 +82,6 @@ describe('SearchBar Component', () => {
     expect(screen.getByDisplayValue('updated')).toBeInTheDocument();
   });
 
-  // NEW: Tests label rendering
   it('renders label when showLabel is true', () => {
     render(<SearchBar onSearch={mockOnSearch} label="Find:" showLabel={true} />);
     
@@ -102,23 +96,19 @@ describe('SearchBar Component', () => {
     expect(screen.getByRole('textbox')).toBeInTheDocument();
   });
 
-  // UPDATED: Changed test to not use data-testid since it's not in the component
   it('applies custom className', () => {
     render(<SearchBar onSearch={mockOnSearch} className="custom-search" />);
     
-    // We can find by role or class name instead
     const container = document.querySelector('.search-bar.custom-search');
     expect(container).toBeInTheDocument();
   });
 
-  // NEW: Tests accessibility attributes
   it('has proper accessibility attributes', () => {
     render(<SearchBar onSearch={mockOnSearch} label="Search data" />);
     
     const input = screen.getByRole('textbox');
     expect(input).toHaveAttribute('aria-label', 'Search data');
     
-    // If label is shown, it should be associated with the input
     const label = screen.getByText('Search data');
     expect(label).toHaveAttribute('for', 'search-input');
     expect(input).toHaveAttribute('id', 'search-input');

@@ -76,15 +76,12 @@ describe("DataTable Component", () => {
   it("renders table with correct headers and data", () => {
     render(<DataTable {...defaultProps} />);
 
-    // Test column headers
     expect(screen.getByText("First Name")).toBeInTheDocument();
     expect(screen.getByText("Last Name")).toBeInTheDocument();
 
-    // Test data rows
     expect(screen.getByText("John")).toBeInTheDocument();
     expect(screen.getByText("Doe")).toBeInTheDocument();
 
-    // Test PageSizeSelector shows "Show X entries"
     expect(screen.getByText("Show")).toBeInTheDocument();
     expect(screen.getByText("entries")).toBeInTheDocument();
   });
@@ -96,13 +93,10 @@ describe("DataTable Component", () => {
     const firstNameHeader = screen.getByText("First Name");
     await User.click(firstNameHeader);
 
-    // Wait for the sort to complete
     await waitFor(() => {
-      // Get all table cells with first names
       const tableRows = screen.getAllByRole("row");
-      const dataRows = tableRows.slice(1); // Skip header
+      const dataRows = tableRows.slice(1); 
 
-      // First row should contain 'Alice'
       const firstRowCells = Array.from(dataRows[0].querySelectorAll("td"));
       const hasAlice = firstRowCells.some(
         (cell) => cell.textContent === "Alice",
@@ -116,16 +110,13 @@ describe("DataTable Component", () => {
     render(<DataTable {...defaultProps} />);
 
     const firstNameHeader = screen.getByText("First Name");
-    await User.click(firstNameHeader); // First click: asc
-    await User.click(firstNameHeader); // Second click: desc
+    await User.click(firstNameHeader); 
+    await User.click(firstNameHeader); 
 
-    // Wait for the sort to complete
     await waitFor(() => {
-      // Get all table cells with first names
       const tableRows = screen.getAllByRole("row");
-      const dataRows = tableRows.slice(1); // Skip header
+      const dataRows = tableRows.slice(1); 
 
-      // First row should contain 'John'
       const firstRowCells = Array.from(dataRows[0].querySelectorAll("td"));
       const hasJohn = firstRowCells.some((cell) => cell.textContent === "John");
       expect(hasJohn).toBe(true);
@@ -139,10 +130,8 @@ describe("DataTable Component", () => {
     const searchInput = screen.getByPlaceholderText("Search...");
     await User.type(searchInput, "Engineering");
 
-    // Wait for filtering to complete
     await waitFor(
       () => {
-        // Should show only engineering department rows
         expect(screen.getByText("John")).toBeInTheDocument();
         expect(screen.getByText("Alice")).toBeInTheDocument();
         expect(screen.queryByText("Jane")).not.toBeInTheDocument();
@@ -154,15 +143,12 @@ describe("DataTable Component", () => {
   it("paginates data correctly", () => {
     render(<DataTable {...defaultProps} itemsPerPage={2} />);
 
-    // Initially shows first 2 items
     expect(screen.getByText("John")).toBeInTheDocument();
     expect(screen.getByText("Jane")).toBeInTheDocument();
     expect(screen.queryByText("Bob")).not.toBeInTheDocument();
 
-    // Pagination should be present
     expect(screen.getByText("Next")).toBeInTheDocument();
 
-    // Check if pagination numbers are present
     const paginationButtons = screen.getAllByRole("button");
     const hasPage2 = paginationButtons.some(
       (button) => button.textContent === "Next",
@@ -175,18 +161,13 @@ it("changes items per page when dropdown changes", async () => {
   const User = userEvent.setup();
   render(<DataTable {...defaultProps} itemsPerPage={2} />);
 
-  // Open the PageSizeSelector dropdown (it's now a custom component)
   const pageSizeTrigger = screen.getByTestId('page-size-trigger');
   await User.click(pageSizeTrigger);
   
-  // Select a different option (e.g., 25)
   const option25 = screen.getByTestId('page-size-option-25');
   await User.click(option25);
 
-  // Wait for the page size change to take effect
   await waitFor(() => {
-    // Should now show all items (since we have 5 items total)
-    // The itemsPerPage prop changes, so all 5 should be visible
     expect(screen.getByText("John")).toBeInTheDocument();
     expect(screen.getByText("Jane")).toBeInTheDocument();
     expect(screen.getByText("Bob")).toBeInTheDocument();
@@ -229,7 +210,6 @@ it("changes items per page when dropdown changes", async () => {
   it("shows empty state when no data", () => {
     const { container } = render(<DataTable data={[]} columns={mockColumns} />);
 
-    // Check if the empty row is in the tbody
     const tbody = container.querySelector("tbody");
     expect(tbody).toBeInTheDocument();
 
@@ -270,7 +250,6 @@ it("changes items per page when dropdown changes", async () => {
     const User = userEvent.setup();
     render(<DataTable {...defaultProps} onRowClick={MockRowClick} />);
 
-    // Find a clickable row (one with data)
     const johnCell = screen.getByText("John");
     const row = johnCell.closest("tr");
 

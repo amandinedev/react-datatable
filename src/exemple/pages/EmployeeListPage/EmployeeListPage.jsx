@@ -253,9 +253,10 @@ const EmployeeListPage = () => {
           striped={true}
           compact={false}
           theme="light"
+          searchMode="and"
           // Customization
           className="employee-data-table"
-          searchPlaceholder="employees by name..."
+          searchPlaceholder="employees by name...(space between keywords)"
           emptyMessage={
             employees.length === 0
               ? "No employees added yet"

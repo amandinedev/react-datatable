@@ -55,6 +55,7 @@ const App = () => {
       columns={columns}
       itemsPerPage={10}
       searchable={true}
+      searchMode="and" 
       sortable={true}
       pagination={true}
       theme="light"
@@ -67,24 +68,25 @@ export default App;
 
 ### Props
 
-| Prop             | Type                   | Description                                      |
-|------------------|------------------------|--------------------------------------------------|
-| `data`           | array                 | Array of data rows.                               |
-| `columns`        | array                 | Array of column definitions.                      |
-| `itemsPerPage`   | number                | Number of rows per page (default: 10).            |
-| `searchable`     | boolean               | Enable/disable search (default: true).            |
-| `sortable`       | boolean               | Enable/disable sorting (default: true).           |
-| `pagination`     | boolean               | Enable/disable pagination (default: true).        |
-| `striped`        | boolean               | Zebra-striped rows (default: false).              |
-| `theme`          | string                | Theme to use (`light`, `dark`).                   |
-| `searchPlaceholder`  | string             | Search input placeholder (default: "Search...").   |
-| `emptyMessage`    | string             | Empty state message (default: "No data available").|
-| `loading`         | boolean            | Loading state (default: false).                    |
-| `loadingMessage`  | string             | Loading message (default: "Loading data...").      |
-| `tableId`         | string              | Table ID for accessibility (default: "data-table").|
-| `ariaLabel`       | string              | ARIA label for screen reader (default: "Data table").|
-| `rowKey`          | string              | Unique key property for rows (default: "id").     |
-| `showRowNumbers`  | boolean            | Show row numbers (default: false).                |
+| Prop                 | Type                  | Description                                                  |
+|----------------------|-----------------------|--------------------------------------------------------------|
+| `data`               | array                 | Array of data rows.                                          |
+| `columns`            | array                 | Array of column definitions.                                 |
+| `itemsPerPage`       | number                | Number of rows per page (default: 10).                       |
+| `searchable`         | boolean               | Enable/disable search (default: true).                       |
+|`searchMode`          |string	               | Search mode: "or" (default: "and" for stricter filtering)    |
+| `sortable`           | boolean               | Enable/disable sorting (default: true).                      |
+| `pagination`         | boolean               | Enable/disable pagination (default: true).                   |
+| `striped`            | boolean               | Zebra-striped rows (default: false).                         |
+| `theme`              | string                | Theme to use (`light`, `dark`).                              |
+| `searchPlaceholder`  | string                | Search input placeholder (default: "Search...").             |
+| `emptyMessage`       | string                | Empty state message (default: "No data available").          |
+| `loading`            | boolean               | Loading state (default: false).                              |
+| `loadingMessage`     | string                | Loading message (default: "Loading data...").                |
+| `tableId`            | string                | Table ID for accessibility (default: "data-table").          |
+| `ariaLabel`          | string                | ARIA label for screen reader (default: "Data table").        |
+| `rowKey`             | string                | Unique key property for rows (default: "id").                |
+| `showRowNumbers`     | boolean               | Show row numbers (default: false).                           |
 
 ### Column Configuration
 
