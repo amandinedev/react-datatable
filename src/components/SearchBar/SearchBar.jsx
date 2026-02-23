@@ -1,6 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 import './SearchBar.scss';
+
+/**
+ * A search input component
+ * 
+ * @component
+ * @param {Object} props - Component props
+ * @param {string} [props.value=''] - Controlled search value
+ * @param {function(string): void} props.onSearch - Callback function when search term changes
+ * @param {string} [props.placeholder='Search...'] - Placeholder text for the input
+ * @param {string} [props.label='Search'] - Label text for the search input
+ * @param {boolean} [props.showLabel=true] - Whether to display the label
+ * @param {string} [props.className=''] - Additional CSS class names
+ * 
+ * @returns {JSX.Element} Rendered search bar
+ */
 
 const SearchBar = ({
   value = '',
@@ -63,16 +77,6 @@ const SearchBar = ({
       </div>
     </div>
   );
-};
-
-// ===== PROP TYPES =====
-SearchBar.propTypes = {
-  value: PropTypes.string,
-  onSearch: PropTypes.func.isRequired,
-  placeholder: PropTypes.string,
-  label: PropTypes.string,
-  showLabel: PropTypes.bool,
-  className: PropTypes.string
 };
 
 export default SearchBar;

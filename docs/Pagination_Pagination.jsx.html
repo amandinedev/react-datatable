@@ -1,4 +1,32 @@
-import { useMemo } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Pagination/Pagination.jsx</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Pagination/Pagination.jsx</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { useMemo } from 'react';
 import PageButton from '../PageButton/PageButton';
 import './Pagination.scss';
 
@@ -27,25 +55,25 @@ const Pagination = ({
 }) => {
   // ===== DERIVED VALUES =====
   const pageNumbers = useMemo(() => {
-    if (totalPages <= 1) return [];
+    if (totalPages &lt;= 1) return [];
     if (!showPageNumbers) return [];
     
     const pages = [];
     let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
     let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
     
-    if (endPage - startPage + 1 < maxVisiblePages) {
+    if (endPage - startPage + 1 &lt; maxVisiblePages) {
       startPage = Math.max(1, endPage - maxVisiblePages + 1);
     }
     
-    for (let i = startPage; i <= endPage; i++) {
+    for (let i = startPage; i &lt;= endPage; i++) {
       pages.push(i);
     }
     
     return pages;
   }, [currentPage, totalPages, showPageNumbers, maxVisiblePages]);
 
-  if (totalPages <= 1) return null;
+  if (totalPages &lt;= 1) return null;
 
   // ===== EVENT HANDLERS =====
   const handlePrevious = () => {
@@ -53,33 +81,33 @@ const Pagination = ({
   };
 
   const handleNext = () => {
-    if (currentPage < totalPages) onPageChange(currentPage + 1);
+    if (currentPage &lt; totalPages) onPageChange(currentPage + 1);
   };
 
   // ===== DERIVED VALUES =====
-  const showStartEllipsis = pageNumbers.length > 0 && pageNumbers[0] > 2;
-  const showEndEllipsis = pageNumbers.length > 0 && 
-    pageNumbers[pageNumbers.length - 1] < totalPages - 1;
+  const showStartEllipsis = pageNumbers.length > 0 &amp;&amp; pageNumbers[0] > 2;
+  const showEndEllipsis = pageNumbers.length > 0 &amp;&amp; 
+    pageNumbers[pageNumbers.length - 1] &lt; totalPages - 1;
 
   // ===== RENDER =====
   return (
-    <nav className="pagination" aria-label="Pagination">
-      {showNavigation && (
-        <button
+    &lt;nav className="pagination" aria-label="Pagination">
+      {showNavigation &amp;&amp; (
+        &lt;button
           className="pagination-button previous"
           onClick={handlePrevious}
           disabled={currentPage === 1}
           aria-label="Previous page"
         >
           Previous
-        </button>
+        &lt;/button>
       )}
       
-      {showPageNumbers && pageNumbers.length > 0 && (
-        <div className="page-numbers" role="list">
+      {showPageNumbers &amp;&amp; pageNumbers.length > 0 &amp;&amp; (
+        &lt;div className="page-numbers" role="list">
           {/* First page */}
-          {pageNumbers[0] > 1 && (
-            <PageButton
+          {pageNumbers[0] > 1 &amp;&amp; (
+            &lt;PageButton
               page={1}
               currentPage={currentPage}
               onPageChange={onPageChange}
@@ -87,13 +115,13 @@ const Pagination = ({
           )}
           
           {/* Start ellipsis */}
-          {showStartEllipsis && (
-            <span className="page-ellipsis" aria-hidden="true">...</span>
+          {showStartEllipsis &amp;&amp; (
+            &lt;span className="page-ellipsis" aria-hidden="true">...&lt;/span>
           )}
           
           {/* Page numbers */}
           {pageNumbers.map(page => (
-            <PageButton
+            &lt;PageButton
               key={page}
               page={page}
               currentPage={currentPage}
@@ -102,33 +130,55 @@ const Pagination = ({
           ))}
           
           {/* End ellipsis */}
-          {showEndEllipsis && (
-            <span className="page-ellipsis" aria-hidden="true">...</span>
+          {showEndEllipsis &amp;&amp; (
+            &lt;span className="page-ellipsis" aria-hidden="true">...&lt;/span>
           )}
           
           {/* Last page */}
-          {pageNumbers[pageNumbers.length - 1] < totalPages && (
-            <PageButton
+          {pageNumbers[pageNumbers.length - 1] &lt; totalPages &amp;&amp; (
+            &lt;PageButton
               page={totalPages}
               currentPage={currentPage}
               onPageChange={onPageChange}
             />
           )}
-        </div>
+        &lt;/div>
       )}
       
-      {showNavigation && (
-        <button
+      {showNavigation &amp;&amp; (
+        &lt;button
           className="pagination-button next"
           onClick={handleNext}
           disabled={currentPage === totalPages}
           aria-label="Next page"
         >
           Next
-        </button>
+        &lt;/button>
       )}
-    </nav>
+    &lt;/nav>
   );
 };
 
-export default Pagination;
+export default Pagination;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#DataTable">DataTable</a></li><li><a href="global.html#PageButton">PageButton</a></li><li><a href="global.html#PageSizeSelector">PageSizeSelector</a></li><li><a href="global.html#Pagination">Pagination</a></li><li><a href="global.html#SearchBar">SearchBar</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.5</a> on Mon Feb 23 2026 11:43:04 GMT+0100 (heure normale d’Europe centrale)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

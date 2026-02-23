@@ -14,6 +14,29 @@ A customizable, accessible, React DataTable component with sorting, filtering, p
 - 🔧 **Customizable**: Render functions, custom styles, and extensive callbacks
 - ⚡ **Optimized Performance**: Memoized computations for smooth performance
 
+## 📦 Prerequisites
+
+Before you start, make sure you have the following installed on your machine:
+
+- Node.js (v14.0.0 or later)
+- npm (v6.0.0 or later) or yarn (v1.22.0 or later)
+
+You can check your current versions by running:
+
+```bash
+node -v
+npm -v
+# or
+yarn -v
+```
+
+## ⚙️ Recommended Setup
+
+For the best development experience, consider using the following tools and settings:
+
+- **Text Editor**: Visual Studio Code (with Prettier and ESLint extensions)
+- **Version Control**: Git
+
 ## 📦 Installation
 
 ```bash
