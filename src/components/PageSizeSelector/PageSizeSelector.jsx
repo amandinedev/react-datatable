@@ -1,9 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
-import './PageSizeSelector.scss';
+import { useState, useRef, useEffect } from "react";
+import "./PageSizeSelector.scss";
 
 /**
  * A customizable dropdown selector for choosing the number of items to display per page
- * 
+ *
  * @component
  * @param {Object} props - Component props
  * @param {number} props.value - Currently selected page size value
@@ -11,7 +11,7 @@ import './PageSizeSelector.scss';
  * @param {number[]} [props.options=[5, 10, 25, 50, 100]] - Array of available page size options
  * @param {'small' | 'medium' | 'large'} [props.size='medium'] - Size variant of the selector
  * @param {boolean} [props.disabled=false] - Whether the selector is disabled
- * 
+ *
  * @returns {JSX.Element} Rendered page size selector
  */
 
@@ -19,8 +19,8 @@ const PageSizeSelector = ({
   value,
   onChange,
   options = [5, 10, 25, 50, 100],
-  size = 'medium',
-  disabled = false
+  size = "medium",
+  disabled = false,
 }) => {
   // ===== STATE & REFS =====
   const [isOpen, setIsOpen] = useState(false);
@@ -42,24 +42,24 @@ const PageSizeSelector = ({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   // Close dropdown on Escape key
   useEffect(() => {
     const handleEscapeKey = (event) => {
-      if (event.key === 'Escape' && isOpen) {
+      if (event.key === "Escape" && isOpen) {
         setIsOpen(false);
         triggerRef.current?.focus();
       }
     };
 
-    document.addEventListener('keydown', handleEscapeKey);
+    document.addEventListener("keydown", handleEscapeKey);
     return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
+      document.removeEventListener("keydown", handleEscapeKey);
     };
   }, [isOpen]);
 
@@ -75,9 +75,9 @@ const PageSizeSelector = ({
   // ===== HELPER FUNCTIONS =====
   const moveFocus = (direction) => {
     const currentIndex = optionsRef.current.findIndex(
-      (option) => option === document.activeElement
+      (option) => option === document.activeElement,
     );
-    
+
     let nextIndex;
     if (currentIndex === -1) {
       nextIndex = direction > 0 ? 0 : optionsRef.current.length - 1;
@@ -86,7 +86,7 @@ const PageSizeSelector = ({
       if (nextIndex < 0) nextIndex = optionsRef.current.length - 1;
       if (nextIndex >= optionsRef.current.length) nextIndex = 0;
     }
-    
+
     optionsRef.current[nextIndex]?.focus();
   };
 
@@ -107,28 +107,28 @@ const PageSizeSelector = ({
 
   const handleTriggerKeyDown = (event) => {
     if (disabled) return;
-    
+
     switch (event.key) {
-      case 'Enter':
-      case ' ':
-      case 'ArrowDown':
-      case 'ArrowUp':
+      case "Enter":
+      case " ":
+      case "ArrowDown":
+      case "ArrowUp":
         event.preventDefault();
         if (!isOpen) {
           setIsOpen(true);
-        } else if (event.key === 'ArrowDown') {
+        } else if (event.key === "ArrowDown") {
           moveFocus(1);
-        } else if (event.key === 'ArrowUp') {
+        } else if (event.key === "ArrowUp") {
           moveFocus(-1);
         }
         break;
-        
-      case 'Tab':
+
+      case "Tab":
         if (isOpen) {
           setIsOpen(false);
         }
         break;
-        
+
       default:
         break;
     }
@@ -136,32 +136,32 @@ const PageSizeSelector = ({
 
   const handleOptionKeyDown = (event, optionValue) => {
     switch (event.key) {
-      case 'Enter':
-      case ' ':
+      case "Enter":
+      case " ":
         event.preventDefault();
         handleOptionClick(optionValue);
         break;
-        
-      case 'ArrowDown':
+
+      case "ArrowDown":
         event.preventDefault();
         moveFocus(1);
         break;
-        
-      case 'ArrowUp':
+
+      case "ArrowUp":
         event.preventDefault();
         moveFocus(-1);
         break;
-        
-      case 'Escape':
+
+      case "Escape":
         event.preventDefault();
         setIsOpen(false);
         triggerRef.current?.focus();
         break;
-        
-      case 'Tab':
+
+      case "Tab":
         setIsOpen(false);
         break;
-        
+
       default:
         break;
     }
@@ -169,30 +169,27 @@ const PageSizeSelector = ({
 
   // ===== CLASS NAME GENERATION =====
   const sizeClass = {
-    small: 'size-small',
-    medium: '',
-    large: 'size-large'
+    small: "size-small",
+    medium: "",
+    large: "size-large",
   }[size];
 
   const triggerClasses = [
-    'page-size-selector__trigger',
-    isOpen ? 'page-size-selector__trigger--open' : '',
-    disabled ? 'page-size-selector__trigger--disabled' : ''
-  ].filter(Boolean).join(' ');
+    "page-size-selector__trigger",
+    isOpen ? "page-size-selector__trigger--open" : "",
+    disabled ? "page-size-selector__trigger--disabled" : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   // ===== RENDER =====
   return (
-    <div 
+    <div
       className={`page-size-selector ${sizeClass}`}
       data-testid="page-size-selector"
     >
-      <span className="page-size-selector__label">
-        Show
-      </span>
-      <div 
-        ref={wrapperRef}
-        className="page-size-selector__wrapper"
-      >
+      <span className="page-size-selector__label">Show</span>
+      <div ref={wrapperRef} className="page-size-selector__wrapper">
         <button
           ref={triggerRef}
           type="button"
@@ -210,9 +207,9 @@ const PageSizeSelector = ({
             ▼
           </span>
         </button>
-        
+
         {isOpen && !disabled && (
-          <div 
+          <div
             className="page-size-selector__options"
             role="listbox"
             data-testid="page-size-options"
@@ -223,7 +220,7 @@ const PageSizeSelector = ({
                 ref={(el) => (optionsRef.current[index] = el)}
                 type="button"
                 className={`page-size-selector__option ${
-                  option === value ? 'page-size-selector__option--selected' : ''
+                  option === value ? "page-size-selector__option--selected" : ""
                 }`}
                 onClick={() => handleOptionClick(option)}
                 onKeyDown={(e) => handleOptionKeyDown(e, option)}
@@ -238,9 +235,7 @@ const PageSizeSelector = ({
           </div>
         )}
       </div>
-      <span className="page-size-selector__label">
-        entries
-      </span>
+      <span className="page-size-selector__label">entries</span>
     </div>
   );
 };

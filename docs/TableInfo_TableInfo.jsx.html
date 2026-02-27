@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: PageButton/PageButton.jsx</title>
+    <title>JSDoc: Source: TableInfo/TableInfo.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: PageButton/PageButton.jsx</h1>
+    <h1 class="page-title">Source: TableInfo/TableInfo.jsx</h1>
 
     
 
@@ -26,40 +26,32 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import "./PageButton.scss";
+            <pre class="prettyprint source linenums"><code>import "./TableInfo.scss";
 
 /**
- * A button component for individual page navigation in pagination
- *
+ * A component that displays information about the current table data range
+ * 
  * @component
  * @param {Object} props - Component props
- * @param {number} props.page - The page number this button represents
- * @param {number} props.currentPage - The currently active page number
- * @param {function(number): void} props.onPageChange - Callback function when page button is clicked
- *
- * @returns {JSX.Element} Rendered page button
+ * @param {number} [props.totalItems=0] - Total number of items in the table
+ * @param {number} [props.startItem=0] - The starting index of the current page
+ * @param {number} [props.endItem=0] - The ending index of the current page
+ * 
+ * @returns {JSX.Element} Rendered table information
  */
 
-const PageButton = ({ page, currentPage, onPageChange }) => {
-  // ===== DERIVED VALUES =====
-  const isActive = currentPage === page;
-
+const TableInfo = ({ totalItems = 0, startItem = 0, endItem = 0 }) => {
   // ===== RENDER =====
   return (
-    &lt;button
-      className={`page-number ${isActive ? "active" : ""}`}
-      onClick={() => onPageChange(page)}
-      aria-label={`Go to page ${page}`}
-      aria-current={isActive ? "page" : undefined}
-      role="listitem"
-    >
-      {page}
-    &lt;/button>
+    &lt;div className="table-info" role="status" aria-live="polite">
+      {totalItems === 0
+        ? "No data available"
+        : `Showing ${startItem} to ${endItem} of ${totalItems} ${totalItems === 1 ? "entry" : "entries"}`}
+    &lt;/div>
   );
 };
 
-export default PageButton;
-</code></pre>
+export default TableInfo;</code></pre>
         </article>
     </section>
 

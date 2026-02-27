@@ -52,7 +52,8 @@ pnpm add react-paginated-datatable
 
 ## ⚙️ Usage
 
-Here's a basic example to get you started:
+Here's a basic example to get you started
+(you can also find a more complete example in the repo):
 
 ### Basic Example
 
